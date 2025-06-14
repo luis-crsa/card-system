@@ -26,7 +26,7 @@ public class Cartao {
     private StatusCartao status;
 
 
-    public Cartao solicitar(CPF cpf, String nomeCompleto, DataDeNascimento dataNascimento,
+    public static Cartao solicitar(CPF cpf, String nomeCompleto, DataDeNascimento dataNascimento,
                             RendaMensal renda, TipoCartao tipo, BandeiraCartao bandeira){
 
         if (!renda.atendeMinimoPara(tipo)) {
