@@ -1,0 +1,31 @@
+package com.cesupa.cardsystem.infrastructure.mapper;
+
+import com.cesupa.cardsystem.application.usecase.dto.SolicitarCartaoEntrada;
+import com.cesupa.cardsystem.domain.entity.Cartao;
+import com.cesupa.cardsystem.dto.CartaoRequestDTO;
+import com.cesupa.cardsystem.dto.CartaoResponseDTO;
+
+public class CartaoMapper {
+
+    public static SolicitarCartaoEntrada toInput(CartaoRequestDTO dto) {
+        return new SolicitarCartaoEntrada(
+                dto.cpf(),
+                dto.nomeCompleto(),
+                dto.dataNascimento(),
+                dto.rendaMensal(),
+                dto.tipoCartao(),
+                dto.bandeiraCartao()
+        );
+    }
+
+    public static CartaoResponseDTO toResponse(Cartao cartao) {
+        return new CartaoResponseDTO(
+                cartao.getId(),
+                cartao.getNumero(),
+                cartao.getStatus().name(),
+                cartao.getTipo().name(),
+                cartao.getBandeira().name()
+        );
+    }
+}
+
