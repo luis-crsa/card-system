@@ -6,6 +6,7 @@ import com.cesupa.cardsystem.domain.enums.TipoCartao;
 import com.cesupa.cardsystem.domain.vo.CPF;
 import com.cesupa.cardsystem.domain.vo.DataDeNascimento;
 import com.cesupa.cardsystem.domain.vo.RendaMensal;
+import com.cesupa.cardsystem.domain.vo.Senha;
 
 import java.util.UUID;
 
@@ -20,6 +21,7 @@ public class Cartao {
     private BandeiraCartao bandeira;
     private String numero;
     private StatusCartao status;
+    private Senha senha;
 
     public Cartao(UUID id, CPF cpf, String nomeCompleto, DataDeNascimento dataNascimento, RendaMensal rendaMensal, TipoCartao tipo, BandeiraCartao bandeira, String numero, StatusCartao status) {
         this.id = id;
@@ -73,6 +75,8 @@ public class Cartao {
         this.id = id;
     }
 
+    public Senha getSenha() { return senha; }
+
     public static Cartao solicitar(CPF cpf, String nomeCompleto, DataDeNascimento dataNascimento,
                                    RendaMensal renda, TipoCartao tipo, BandeiraCartao bandeira){
 
@@ -93,6 +97,19 @@ public class Cartao {
                 numeroGerado,
                 StatusCartao.SOLICITADO
         );
+    }
+
+    public void ativar(CPF cpfInformado, Senha senhaInformada) {
+        if (!this.cpf.equals(cpfInformado)) {
+            throw new IllegalArgumentException("CPF não confere com o cartão.");
+        }
+
+        if (!(status == StatusCartao.APROVADO || status == StatusCartao.ENTREGUE)) {
+            throw new IllegalStateException("Cartão não pode ser ativado. Status atual: " + status);
+        }
+
+        this.senha = senhaInformada;
+        this.status = StatusCartao.ATIVO;
     }
 
     private static String gerarNumero() {

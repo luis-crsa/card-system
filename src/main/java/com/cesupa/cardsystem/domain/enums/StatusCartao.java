@@ -3,5 +3,7 @@ package com.cesupa.cardsystem.domain.enums;
 public enum StatusCartao {
     SOLICITADO,
     APROVADO,
-    ATIVO
+    ENTREGUE,
+    ATIVO,
+    BLOQUEADO_TEMPORARIO
 }
