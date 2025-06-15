@@ -1,7 +1,6 @@
 package com.cesupa.cardsystem.application.usecase;
 
 import com.cesupa.cardsystem.application.usecase.dto.BloquearCartaoEntrada;
-import com.cesupa.cardsystem.domain.entity.Cartao;
 import com.cesupa.cardsystem.domain.repository.CartaoRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +14,7 @@ public class BloquearCartaoUseCase {
     }
 
     public void bloquear(BloquearCartaoEntrada entrada) {
-        var cartaoOpt = cartaoRepository.findByNumero(entrada.numeroCartao());
+        var cartaoOpt = cartaoRepository.buscarPorNumero(entrada.numeroCartao());
 
         if (cartaoOpt.isEmpty()) {
             throw new RuntimeException("Cartão não encontrado.");
@@ -23,11 +22,11 @@ public class BloquearCartaoUseCase {
 
         var cartao = cartaoOpt.get();
 
-        if (!cartao.getCpf().getNumero().equals(entrada.cpf())) {
+        if (!cartao.getCpf().valor().equals(entrada.cpf())) {
             throw new RuntimeException("CPF não corresponde ao titular do cartão.");
         }
 
         cartao.bloquearTemporariamente(entrada.motivo());
-        cartaoRepository.save(cartao);
+        cartaoRepository.salvar(cartao);
     }
 }
