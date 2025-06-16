@@ -9,5 +9,6 @@ CREATE TABLE IF NOT EXISTS cartoes (
     tipo VARCHAR(20) NOT NULL,
     bandeira VARCHAR(20) NOT NULL,
     numero VARCHAR(20) NOT NULL,
-    status VARCHAR(30) NOT NULL
-);
+    status VARCHAR(30) NOT NULL,
+    motivo_bloqueio VARCHAR(255)
+    );

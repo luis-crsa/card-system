@@ -18,14 +18,17 @@ public class ImplementacaoCartaoRepositoryJpa implements CartaoRepository {
     @Override
     public void salvar(Cartao cartao) {
         CartaoEntity entity = CartaoEntityMapper.toEntity(cartao);
-
         CartaoEntity salvo = jpa.save(entity);
-
         cartao.atribuirId(salvo.getId());
     }
 
     @Override
     public Optional<Cartao> buscarPorId(UUID id) {
         return jpa.findById(id).map(CartaoEntityMapper::toDomain);
+    }
+
+    @Override
+    public Optional<Cartao> buscarPorNumero(String numero) {
+        return jpa.findByNumero(numero).map(CartaoEntityMapper::toDomain);
     }
 }
