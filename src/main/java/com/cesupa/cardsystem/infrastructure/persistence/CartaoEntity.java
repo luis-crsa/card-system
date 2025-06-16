@@ -35,7 +35,6 @@ public class CartaoEntity {
     @Enumerated(EnumType.STRING)
     private StatusCartao status;
 
-    // ✅ Novo campo adicionado
     private String motivoBloqueio;
 
     public UUID getId() {
@@ -110,7 +109,6 @@ public class CartaoEntity {
         this.status = status;
     }
 
-    // ✅ Getter e Setter do novo campo
     public String getMotivoBloqueio() {
         return motivoBloqueio;
     }
