@@ -1,13 +1,15 @@
 package com.cesupa.cardsystem.infrastructure.mapper;
 
+import com.cesupa.cardsystem.application.usecase.dto.AtivarCartaoEntrada;
+import com.cesupa.cardsystem.application.usecase.dto.AtivarCartaoRequestDTO;
 import com.cesupa.cardsystem.application.usecase.dto.SolicitarCartaoEntrada;
 import com.cesupa.cardsystem.domain.entity.Cartao;
-import com.cesupa.cardsystem.dto.CartaoRequestDTO;
+import com.cesupa.cardsystem.dto.SolitarCartaoRequestDTO;
 import com.cesupa.cardsystem.dto.CartaoResponseDTO;
 
 public class CartaoMapper {
 
-    public static SolicitarCartaoEntrada toInput(CartaoRequestDTO dto) {
+    public static SolicitarCartaoEntrada solicitarToInput(SolitarCartaoRequestDTO dto) {
         return new SolicitarCartaoEntrada(
                 dto.cpf(),
                 dto.nomeCompleto(),
@@ -27,5 +29,14 @@ public class CartaoMapper {
                 cartao.getBandeira().name()
         );
     }
+
+    public static AtivarCartaoEntrada ativarToInput(AtivarCartaoRequestDTO dto){
+        return new AtivarCartaoEntrada(
+                dto.numero(),
+                dto.cpf(),
+                dto.senha()
+        );
+    }
+
 }
 

@@ -31,6 +31,6 @@ public class ImplementacaoCartaoRepositoryJpa implements CartaoRepository {
 
     @Override
     public Optional<Cartao> buscarPorNumero(String numero) {
-        return Optional.empty();
+        return jpa.findByNumero(numero).map(CartaoEntityMapper::toDomain);
     }
 }
