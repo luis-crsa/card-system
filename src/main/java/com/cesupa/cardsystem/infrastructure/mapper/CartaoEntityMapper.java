@@ -19,6 +19,7 @@ public class CartaoEntityMapper {
         entity.setBandeira(domain.getBandeira());
         entity.setNumero(domain.getNumero());
         entity.setStatus(domain.getStatus());
+        entity.setMotivoBloqueio(domain.getMotivoBloqueio());
         return entity;
     }
 
