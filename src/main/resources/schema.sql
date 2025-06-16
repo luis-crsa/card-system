@@ -1,7 +1,7 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 CREATE TABLE IF NOT EXISTS cartoes (
-                                       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     cpf VARCHAR(11) NOT NULL,
     nome_completo VARCHAR(100) NOT NULL,
     data_nascimento DATE NOT NULL,
