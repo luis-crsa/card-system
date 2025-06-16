@@ -6,6 +6,7 @@ import com.cesupa.cardsystem.domain.enums.TipoCartao;
 import com.cesupa.cardsystem.domain.vo.CPF;
 import com.cesupa.cardsystem.domain.vo.DataDeNascimento;
 import com.cesupa.cardsystem.domain.vo.RendaMensal;
+import com.cesupa.cardsystem.domain.vo.Senha;
 
 import java.util.UUID;
 
@@ -20,12 +21,12 @@ public class Cartao {
     private BandeiraCartao bandeira;
     private String numero;
     private StatusCartao status;
+    private Senha senha;
     private String motivoBloqueio;
 
     public Cartao(UUID id, CPF cpf, String nomeCompleto, DataDeNascimento dataNascimento,
                   RendaMensal rendaMensal, TipoCartao tipo, BandeiraCartao bandeira,
                   String numero, StatusCartao status, String motivoBloqueio) {
-
         this.id = id;
         this.cpf = cpf;
         this.nomeCompleto = nomeCompleto;
@@ -60,6 +61,19 @@ public class Cartao {
                 null
         );
     }
+  
+    public void ativar(CPF cpfInformado, Senha senhaInformada) {
+        if (!this.cpf.equals(cpfInformado)) {
+            throw new IllegalArgumentException("CPF não confere com o cartão.");
+        }
+
+        if (!(status == StatusCartao.APROVADO || status == StatusCartao.ENTREGUE)) {
+            throw new IllegalStateException("Cartão não pode ser ativado. Status atual: " + status);
+        }
+
+        this.senha = senhaInformada;
+        this.status = StatusCartao.ATIVO;
+    }
 
     public void bloquearTemporariamente(String motivo) {
         if (this.status != StatusCartao.ATIVO) {
@@ -73,7 +87,6 @@ public class Cartao {
         return String.valueOf((long) (Math.random() * 1_0000_0000_0000_0000L));
     }
 
-    // Getters
     public UUID getId() {
         return id;
     }
@@ -110,10 +123,12 @@ public class Cartao {
         return status;
     }
 
+    public Senha getSenha() { return senha; }
+  
     public String getMotivoBloqueio() {
         return motivoBloqueio;
     }
-
+    
     public void atribuirId(UUID id) {
         this.id = id;
     }
