@@ -2,9 +2,7 @@ package com.cesupa.cardsystem.application.usecase;
 
 import com.cesupa.cardsystem.application.usecase.dto.BloquearCartaoEntrada;
 import com.cesupa.cardsystem.domain.repository.CartaoRepository;
-import org.springframework.stereotype.Service;
 
-@Service
 public class BloquearCartaoUseCase {
 
     private final CartaoRepository cartaoRepository;
