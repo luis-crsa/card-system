@@ -29,7 +29,7 @@ public class CartaoController {
         return ResponseEntity.ok(resposta);
     }
 
-    @PutMapping
+    @PutMapping("/ativar")
     public  ResponseEntity<CartaoResponseDTO> ativar(@RequestBody AtivarCartaoRequestDTO dto){
         var input = CartaoMapper.ativarToInput(dto);
         var cartao = ativarCartaoUseCase.executar(input);
