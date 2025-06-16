@@ -10,4 +10,3 @@ public interface CartaoRepository {
     Optional<Cartao> buscarPorId(UUID id);
     Optional<Cartao> buscarPorNumero(String numero);
 }
-

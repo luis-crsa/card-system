@@ -18,9 +18,7 @@ public class ImplementacaoCartaoRepositoryJpa implements CartaoRepository {
     @Override
     public void salvar(Cartao cartao) {
         CartaoEntity entity = CartaoEntityMapper.toEntity(cartao);
-
         CartaoEntity salvo = jpa.save(entity);
-
         cartao.atribuirId(salvo.getId());
     }
 

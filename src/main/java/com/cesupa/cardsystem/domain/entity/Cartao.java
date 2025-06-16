@@ -22,8 +22,11 @@ public class Cartao {
     private String numero;
     private StatusCartao status;
     private Senha senha;
+    private String motivoBloqueio;
 
-    public Cartao(UUID id, CPF cpf, String nomeCompleto, DataDeNascimento dataNascimento, RendaMensal rendaMensal, TipoCartao tipo, BandeiraCartao bandeira, String numero, StatusCartao status) {
+    public Cartao(UUID id, CPF cpf, String nomeCompleto, DataDeNascimento dataNascimento,
+                  RendaMensal rendaMensal, TipoCartao tipo, BandeiraCartao bandeira,
+                  String numero, StatusCartao status, String motivoBloqueio) {
         this.id = id;
         this.cpf = cpf;
         this.nomeCompleto = nomeCompleto;
@@ -33,6 +36,55 @@ public class Cartao {
         this.bandeira = bandeira;
         this.numero = numero;
         this.status = status;
+        this.motivoBloqueio = motivoBloqueio;
+    }
+
+    public static Cartao solicitar(CPF cpf, String nomeCompleto, DataDeNascimento dataNascimento,
+                                   RendaMensal renda, TipoCartao tipo, BandeiraCartao bandeira){
+
+        if (!renda.atendeMinimoPara(tipo)) {
+            throw new IllegalArgumentException("Renda insuficiente para tipo de cartão solicitado.");
+        }
+
+        String numeroGerado = gerarNumero();
+
+        return new Cartao(
+                null,
+                cpf,
+                nomeCompleto,
+                dataNascimento,
+                renda,
+                tipo,
+                bandeira,
+                numeroGerado,
+                StatusCartao.SOLICITADO,
+                null
+        );
+    }
+  
+    public void ativar(CPF cpfInformado, Senha senhaInformada) {
+        if (!this.cpf.equals(cpfInformado)) {
+            throw new IllegalArgumentException("CPF não confere com o cartão.");
+        }
+
+        if (!(status == StatusCartao.APROVADO || status == StatusCartao.ENTREGUE)) {
+            throw new IllegalStateException("Cartão não pode ser ativado. Status atual: " + status);
+        }
+
+        this.senha = senhaInformada;
+        this.status = StatusCartao.ATIVO;
+    }
+
+    public void bloquearTemporariamente(String motivo) {
+        if (this.status != StatusCartao.ATIVO) {
+            throw new RuntimeException("Somente cartões ativos podem ser bloqueados temporariamente");
+        }
+        this.status = StatusCartao.BLOQUEADO_TEMPORARIO;
+        this.motivoBloqueio = motivo;
+    }
+
+    private static String gerarNumero() {
+        return String.valueOf((long) (Math.random() * 1_0000_0000_0000_0000L));
     }
 
     public UUID getId() {
@@ -71,48 +123,13 @@ public class Cartao {
         return status;
     }
 
+    public Senha getSenha() { return senha; }
+  
+    public String getMotivoBloqueio() {
+        return motivoBloqueio;
+    }
+    
     public void atribuirId(UUID id) {
         this.id = id;
-    }
-
-    public Senha getSenha() { return senha; }
-
-    public static Cartao solicitar(CPF cpf, String nomeCompleto, DataDeNascimento dataNascimento,
-                                   RendaMensal renda, TipoCartao tipo, BandeiraCartao bandeira){
-
-        if (!renda.atendeMinimoPara(tipo)) {
-            throw new IllegalArgumentException("Renda insuficiente para tipo de cartão solicitado.");
-        }
-
-        String numeroGerado = gerarNumero();
-
-        return new Cartao(
-                null,
-                cpf,
-                nomeCompleto,
-                dataNascimento,
-                renda,
-                tipo,
-                bandeira,
-                numeroGerado,
-                StatusCartao.SOLICITADO
-        );
-    }
-
-    public void ativar(CPF cpfInformado, Senha senhaInformada) {
-        if (!this.cpf.equals(cpfInformado)) {
-            throw new IllegalArgumentException("CPF não confere com o cartão.");
-        }
-
-        if (!(status == StatusCartao.APROVADO || status == StatusCartao.ENTREGUE)) {
-            throw new IllegalStateException("Cartão não pode ser ativado. Status atual: " + status);
-        }
-
-        this.senha = senhaInformada;
-        this.status = StatusCartao.ATIVO;
-    }
-
-    private static String gerarNumero() {
-        return String.valueOf((long) (Math.random() * 1_0000_0000_0000_0000L));
     }
 }

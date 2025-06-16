@@ -19,6 +19,7 @@ public class CartaoEntityMapper {
         entity.setBandeira(domain.getBandeira());
         entity.setNumero(domain.getNumero());
         entity.setStatus(domain.getStatus());
+        entity.setMotivoBloqueio(domain.getMotivoBloqueio());
         return entity;
     }
 
@@ -32,7 +33,8 @@ public class CartaoEntityMapper {
                 entity.getTipo(),
                 entity.getBandeira(),
                 entity.getNumero(),
-                entity.getStatus()
+                entity.getStatus(),
+                entity.getMotivoBloqueio()
         );
     }
 }
