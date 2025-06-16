@@ -57,7 +57,7 @@ public class Cartao {
                 bandeira,
                 numeroGerado,
                 StatusCartao.SOLICITADO,
-                null // ← motivoBloqueio começa nulo
+                null
         );
     }
 
