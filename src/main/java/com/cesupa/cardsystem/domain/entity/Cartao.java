@@ -26,7 +26,7 @@ public class Cartao {
 
     public Cartao(UUID id, CPF cpf, String nomeCompleto, DataDeNascimento dataNascimento,
                   RendaMensal rendaMensal, TipoCartao tipo, BandeiraCartao bandeira,
-                  String numero, StatusCartao status, String motivoBloqueio) {
+                  String numero, StatusCartao status, Senha senha, String motivoBloqueio) {
         this.id = id;
         this.cpf = cpf;
         this.nomeCompleto = nomeCompleto;
@@ -36,6 +36,7 @@ public class Cartao {
         this.bandeira = bandeira;
         this.numero = numero;
         this.status = status;
+        this.senha = senha;
         this.motivoBloqueio = motivoBloqueio;
     }
 
@@ -58,6 +59,7 @@ public class Cartao {
                 bandeira,
                 numeroGerado,
                 StatusCartao.SOLICITADO,
+                null,
                 null
         );
     }

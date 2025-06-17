@@ -1,10 +1,9 @@
 package com.cesupa.cardsystem.infrastructure.controller;
 
 import com.cesupa.cardsystem.application.usecase.AtivarCartaoUseCase;
+import com.cesupa.cardsystem.application.usecase.RedefinirSenhaUseCase;
 import com.cesupa.cardsystem.application.usecase.SolicitarCartaoUseCase;
-import com.cesupa.cardsystem.dto.AtivarCartaoRequestDTO;
-import com.cesupa.cardsystem.dto.SolitarCartaoRequestDTO;
-import com.cesupa.cardsystem.dto.CartaoResponseDTO;
+import com.cesupa.cardsystem.dto.*;
 import com.cesupa.cardsystem.infrastructure.mapper.CartaoMapper;
 import com.cesupa.cardsystem.application.usecase.BloquearCartaoUseCase;
 import com.cesupa.cardsystem.application.usecase.dto.BloquearCartaoEntrada;
@@ -17,11 +16,13 @@ public class CartaoController {
 
     private final SolicitarCartaoUseCase solicitarCartaoUseCase;
     private final AtivarCartaoUseCase ativarCartaoUseCase;
+    private final RedefinirSenhaUseCase redefinirSenhaUseCase;
     private final BloquearCartaoUseCase bloquearCartaoUseCase;
 
-    public CartaoController(SolicitarCartaoUseCase solicitarCartaoUseCase, AtivarCartaoUseCase ativarCartaoUseCase, BloquearCartaoUseCase bloquearCartaoUseCase) {
+    public CartaoController(SolicitarCartaoUseCase solicitarCartaoUseCase, AtivarCartaoUseCase ativarCartaoUseCase, RedefinirSenhaUseCase redefinirSenhaUseCase, BloquearCartaoUseCase bloquearCartaoUseCase) {
         this.solicitarCartaoUseCase = solicitarCartaoUseCase;
         this.ativarCartaoUseCase = ativarCartaoUseCase;
+        this.redefinirSenhaUseCase = redefinirSenhaUseCase;
         this.bloquearCartaoUseCase = bloquearCartaoUseCase;
     }
 
@@ -34,13 +35,21 @@ public class CartaoController {
     }
 
     @PutMapping("/ativar")
-    public  ResponseEntity<CartaoResponseDTO> ativar(@RequestBody AtivarCartaoRequestDTO dto) {
+    public ResponseEntity<CartaoSenhaResponseDTO> ativar(@RequestBody AtivarCartaoRequestDTO dto) {
         var input = CartaoMapper.ativarToInput(dto);
         var cartao = ativarCartaoUseCase.executar(input);
-        var resposta = CartaoMapper.toResponse(cartao);
+        var resposta = CartaoMapper.toSenhaResponse(cartao);
         return ResponseEntity.ok(resposta);
     }
-  
+
+    @PutMapping("/redefinir-senha")
+    public ResponseEntity<CartaoSenhaResponseDTO> redefiniSenha(@RequestBody RedefinirSenhaRequestDTO dto){
+        var input = CartaoMapper.redefinirToInput(dto);
+        var cartao = redefinirSenhaUseCase.executar(input);
+        var resposta = CartaoMapper.toSenhaResponse(cartao);
+        return ResponseEntity.ok(resposta);
+    }
+
     @PutMapping("/bloquear")
     public ResponseEntity<String> bloquear(@RequestBody BloquearCartaoEntrada entrada) {
         bloquearCartaoUseCase.bloquear(entrada);
