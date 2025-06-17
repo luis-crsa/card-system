@@ -2,7 +2,7 @@ package com.cesupa.cardsystem.infrastructure.controller;
 
 import com.cesupa.cardsystem.application.usecase.AtivarCartaoUseCase;
 import com.cesupa.cardsystem.application.usecase.SolicitarCartaoUseCase;
-import com.cesupa.cardsystem.application.usecase.dto.AtivarCartaoRequestDTO;
+import com.cesupa.cardsystem.dto.AtivarCartaoRequestDTO;
 import com.cesupa.cardsystem.dto.SolitarCartaoRequestDTO;
 import com.cesupa.cardsystem.dto.CartaoResponseDTO;
 import com.cesupa.cardsystem.infrastructure.mapper.CartaoMapper;

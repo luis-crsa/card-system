@@ -1,4 +1,4 @@
-package com.cesupa.cardsystem.application.usecase.dto;
+package com.cesupa.cardsystem.dto;
 
 public record AtivarCartaoRequestDTO(
         String numero,
