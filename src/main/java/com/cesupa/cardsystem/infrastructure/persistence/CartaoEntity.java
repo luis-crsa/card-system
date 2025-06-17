@@ -35,6 +35,7 @@ public class CartaoEntity {
     @Enumerated(EnumType.STRING)
     private StatusCartao status;
 
+    private String senha;
     private String motivoBloqueio;
 
     public UUID getId() {
@@ -107,6 +108,14 @@ public class CartaoEntity {
 
     public void setStatus(StatusCartao status) {
         this.status = status;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 
     public String getMotivoBloqueio() {

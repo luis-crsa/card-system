@@ -2,6 +2,7 @@ package com.cesupa.cardsystem.config;
 
 import com.cesupa.cardsystem.application.usecase.AtivarCartaoUseCase;
 import com.cesupa.cardsystem.application.usecase.BloquearCartaoUseCase;
+import com.cesupa.cardsystem.application.usecase.RedefinirSenhaUseCase;
 import com.cesupa.cardsystem.application.usecase.SolicitarCartaoUseCase;
 import com.cesupa.cardsystem.domain.repository.CartaoRepository;
 import com.cesupa.cardsystem.infrastructure.persistence.CartaoJpaRepository;
@@ -20,6 +21,11 @@ public class BeansConfiguration {
     @Bean
     public AtivarCartaoUseCase ativarCartaoUseCase(CartaoRepository repository) {
         return new AtivarCartaoUseCase(repository);
+    }
+
+    @Bean
+    public RedefinirSenhaUseCase redefinirSenhaUseCase(CartaoRepository repository) {
+        return new RedefinirSenhaUseCase(repository);
     }
 
     @Bean

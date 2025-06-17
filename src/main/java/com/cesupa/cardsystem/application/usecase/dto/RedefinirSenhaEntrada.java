@@ -1,7 +1,8 @@
 package com.cesupa.cardsystem.application.usecase.dto;
 
-public record AtivarCartaoRequestDTO(
+public record RedefinirSenhaEntrada(
         String numero,
         String cpf,
-        String senha
+        String senhaAntiga,
+        String senhaNova
 ) {}
