@@ -13,12 +13,12 @@ public class RedefinirSenhaUseCase {
         this.repository = repository;
     }
 
-    public Cartao executar(RedefinirSenhaEntrada input){
-        CPF cpf = new CPF(input.cpf());
-        Senha senhaAntiga = new Senha(input.senhaAntiga());
-        Senha senhaNova = new Senha(input.senhaNova());
+    public Cartao executar(RedefinirSenhaEntrada entrada){
+        CPF cpf = new CPF(entrada.cpf());
+        Senha senhaAntiga = new Senha(entrada.senhaAntiga());
+        Senha senhaNova = new Senha(entrada.senhaNova());
 
-        Cartao cartao = repository.buscarPorNumero(input.numero()).orElseThrow(() -> new IllegalArgumentException("Cartão não encontrado."));
+        Cartao cartao = repository.buscarPorNumero(entrada.numero()).orElseThrow(() -> new IllegalArgumentException("Cartão não encontrado."));
         cartao.redefinirSenha(cpf, senhaAntiga, senhaNova);
         repository.salvar(cartao);
         return cartao;
