@@ -51,8 +51,10 @@ public class CartaoController {
     }
 
     @PutMapping("/bloquear")
-    public ResponseEntity<String> bloquear(@RequestBody BloquearCartaoEntrada entrada) {
-        bloquearCartaoUseCase.bloquear(entrada);
-        return ResponseEntity.ok("Cartão bloqueado temporariamente com sucesso.");
+    public ResponseEntity<CartaoMotivoResponseDTO> bloquear(@RequestBody BloquearCartaoRequestDTO dto) {
+        var input = CartaoMapper.bloquearToInput(dto);
+        var cartao = bloquearCartaoUseCase.executar(input);
+        var resposta = CartaoMapper.toMotivoResponse(cartao);
+        return ResponseEntity.ok(resposta);
     }
 }
