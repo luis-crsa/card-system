@@ -1,11 +1,8 @@
 package com.cesupa.cardsystem.infrastructure.controller;
 
-import com.cesupa.cardsystem.application.usecase.AtivarCartaoUseCase;
-import com.cesupa.cardsystem.application.usecase.RedefinirSenhaUseCase;
-import com.cesupa.cardsystem.application.usecase.SolicitarCartaoUseCase;
+import com.cesupa.cardsystem.application.usecase.*;
 import com.cesupa.cardsystem.dto.*;
 import com.cesupa.cardsystem.infrastructure.mapper.CartaoMapper;
-import com.cesupa.cardsystem.application.usecase.BloquearCartaoUseCase;
 import com.cesupa.cardsystem.application.usecase.dto.BloquearCartaoEntrada;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,12 +17,14 @@ public class CartaoController {
     private final AtivarCartaoUseCase ativarCartaoUseCase;
     private final RedefinirSenhaUseCase redefinirSenhaUseCase;
     private final BloquearCartaoUseCase bloquearCartaoUseCase;
+    private final CancelarCartaoUseCase cancelarCartaoUseCase;
 
-    public CartaoController(SolicitarCartaoUseCase solicitarCartaoUseCase, AtivarCartaoUseCase ativarCartaoUseCase, RedefinirSenhaUseCase redefinirSenhaUseCase, BloquearCartaoUseCase bloquearCartaoUseCase) {
+    public CartaoController(SolicitarCartaoUseCase solicitarCartaoUseCase, AtivarCartaoUseCase ativarCartaoUseCase, RedefinirSenhaUseCase redefinirSenhaUseCase, BloquearCartaoUseCase bloquearCartaoUseCase, CancelarCartaoUseCase cancelarCartaoUseCase) {
         this.solicitarCartaoUseCase = solicitarCartaoUseCase;
         this.ativarCartaoUseCase = ativarCartaoUseCase;
         this.redefinirSenhaUseCase = redefinirSenhaUseCase;
         this.bloquearCartaoUseCase = bloquearCartaoUseCase;
+        this.cancelarCartaoUseCase = cancelarCartaoUseCase;
     }
 
     @PostMapping("/solicitar")
@@ -56,6 +55,14 @@ public class CartaoController {
     public ResponseEntity<CartaoMotivoResponseDTO> bloquear(@RequestBody BloquearCartaoRequestDTO dto) {
         var input = CartaoMapper.bloquearToInput(dto);
         var cartao = bloquearCartaoUseCase.executar(input);
+        var resposta = CartaoMapper.toMotivoResponse(cartao);
+        return ResponseEntity.ok(resposta);
+    }
+
+    @PutMapping("/cancelar")
+    public ResponseEntity<CartaoMotivoResponseDTO> cancelar(@RequestBody CancelarCartaoRequestDTO dto) {
+        var input = CartaoMapper.cancelarToInput(dto);
+        var cartao = cancelarCartaoUseCase.executar(input);
         var resposta = CartaoMapper.toMotivoResponse(cartao);
         return ResponseEntity.ok(resposta);
     }

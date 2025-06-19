@@ -106,6 +106,16 @@ public class Cartao {
         this.motivoBloqueio = motivo;
     }
 
+    public void cancelarDefinitivamente(String motivo) {
+        if (this.status != StatusCartao.ATIVO && this.status != StatusCartao.BLOQUEADO_TEMPORARIO) {
+            throw new RuntimeException("Apenas cartões ativos ou temporariamente bloqueados podem ser cancelados.");
+        }
+
+        this.status = StatusCartao.CANCELADO;
+        this.motivoBloqueio = motivo;
+    }
+
+
     private static String gerarNumero() {
         return String.valueOf((long) (Math.random() * 1_0000_0000_0000_0000L));
     }
