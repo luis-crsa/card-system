@@ -1,10 +1,7 @@
 package com.cesupa.cardsystem.infrastructure.mapper;
 
-import com.cesupa.cardsystem.application.usecase.dto.AtivarCartaoEntrada;
-import com.cesupa.cardsystem.application.usecase.dto.BloquearCartaoEntrada;
-import com.cesupa.cardsystem.application.usecase.dto.RedefinirSenhaEntrada;
+import com.cesupa.cardsystem.application.usecase.dto.*;
 import com.cesupa.cardsystem.dto.*;
-import com.cesupa.cardsystem.application.usecase.dto.SolicitarCartaoEntrada;
 import com.cesupa.cardsystem.domain.entity.Cartao;
 
 public class CartaoMapper {
@@ -72,6 +69,14 @@ public class CartaoMapper {
                 cartao.getNumero(),
                 cartao.getStatus().name(),
                 cartao.getMotivoBloqueio()
+        );
+    }
+
+    public static CancelarCartaoEntrada cancelarToInput(CancelarCartaoRequestDTO dto) {
+        return new CancelarCartaoEntrada(
+                dto.numero(),
+                dto.cpf(),
+                dto.motivo()
         );
     }
 }
