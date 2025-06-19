@@ -1,7 +1,7 @@
 package com.cesupa.cardsystem.application.usecase.dto;
 
 public record BloquearCartaoEntrada(
-        String numeroCartao,
+        String numero,
         String cpf,
         String motivo
 ) {}

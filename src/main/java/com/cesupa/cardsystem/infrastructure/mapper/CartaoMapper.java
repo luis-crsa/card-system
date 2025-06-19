@@ -1,6 +1,7 @@
 package com.cesupa.cardsystem.infrastructure.mapper;
 
 import com.cesupa.cardsystem.application.usecase.dto.AtivarCartaoEntrada;
+import com.cesupa.cardsystem.application.usecase.dto.BloquearCartaoEntrada;
 import com.cesupa.cardsystem.application.usecase.dto.RedefinirSenhaEntrada;
 import com.cesupa.cardsystem.dto.*;
 import com.cesupa.cardsystem.application.usecase.dto.SolicitarCartaoEntrada;
@@ -16,6 +17,31 @@ public class CartaoMapper {
                 dto.rendaMensal(),
                 dto.tipoCartao(),
                 dto.bandeiraCartao()
+        );
+    }
+
+    public static AtivarCartaoEntrada ativarToInput(AtivarCartaoRequestDTO dto){
+        return new AtivarCartaoEntrada(
+                dto.numero(),
+                dto.cpf(),
+                dto.senha()
+        );
+    }
+
+    public static RedefinirSenhaEntrada redefinirToInput(RedefinirSenhaRequestDTO dto){
+        return new RedefinirSenhaEntrada(
+                dto.numero(),
+                dto.cpf(),
+                dto.senhaAntiga(),
+                dto.senhaNova()
+        );
+    }
+
+    public static BloquearCartaoEntrada bloquearToInput(BloquearCartaoRequestDTO dto){
+        return new BloquearCartaoEntrada(
+                dto.numero(),
+                dto.cpf(),
+                dto.motivo()
         );
     }
 
@@ -40,20 +66,12 @@ public class CartaoMapper {
         );
     }
 
-    public static AtivarCartaoEntrada ativarToInput(AtivarCartaoRequestDTO dto){
-        return new AtivarCartaoEntrada(
-                dto.numero(),
-                dto.cpf(),
-                dto.senha()
-        );
-    }
-
-    public static RedefinirSenhaEntrada redefinirToInput(RedefinirSenhaRequestDTO dto){
-        return new RedefinirSenhaEntrada(
-                dto.numero(),
-                dto.cpf(),
-                dto.senhaAntiga(),
-                dto.senhaNova()
+    public static CartaoMotivoResponseDTO toMotivoResponse(Cartao cartao) {
+        return new CartaoMotivoResponseDTO(
+                cartao.getId(),
+                cartao.getNumero(),
+                cartao.getStatus().name(),
+                cartao.getMotivoBloqueio()
         );
     }
 }

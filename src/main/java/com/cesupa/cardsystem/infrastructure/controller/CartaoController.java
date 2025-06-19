@@ -10,6 +10,8 @@ import com.cesupa.cardsystem.application.usecase.dto.BloquearCartaoEntrada;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+
 @RestController
 @RequestMapping("/cartoes")
 public class CartaoController {
@@ -31,7 +33,7 @@ public class CartaoController {
         var input = CartaoMapper.solicitarToInput(dto);
         var novoCartao = solicitarCartaoUseCase.executar(input);
         var resposta = CartaoMapper.toResponse(novoCartao);
-        return ResponseEntity.ok(resposta);
+        return ResponseEntity.status(201).body(resposta);
     }
 
     @PutMapping("/ativar")
@@ -50,9 +52,11 @@ public class CartaoController {
         return ResponseEntity.ok(resposta);
     }
 
-    @PutMapping("/bloquear")
-    public ResponseEntity<String> bloquear(@RequestBody BloquearCartaoEntrada entrada) {
-        bloquearCartaoUseCase.bloquear(entrada);
-        return ResponseEntity.ok("Cartão bloqueado temporariamente com sucesso.");
+    @PutMapping("/bloquear-temporariamente")
+    public ResponseEntity<CartaoMotivoResponseDTO> bloquear(@RequestBody BloquearCartaoRequestDTO dto) {
+        var input = CartaoMapper.bloquearToInput(dto);
+        var cartao = bloquearCartaoUseCase.executar(input);
+        var resposta = CartaoMapper.toMotivoResponse(cartao);
+        return ResponseEntity.ok(resposta);
     }
 }

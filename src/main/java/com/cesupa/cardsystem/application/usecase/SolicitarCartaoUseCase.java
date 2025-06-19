@@ -17,14 +17,14 @@ public class SolicitarCartaoUseCase {
         this.repository = repository;
     }
 
-    public Cartao executar(SolicitarCartaoEntrada input) {
-        CPF cpf = new CPF(input.cpf());
-        DataDeNascimento nascimento = new DataDeNascimento(input.dataNascimento());
-        RendaMensal renda = new RendaMensal(input.rendaMensal());
-        var tipo = TipoCartao.valueOf(input.tipoCartao().toUpperCase());
-        var bandeira = BandeiraCartao.valueOf(input.bandeiraCartao().toUpperCase());
+    public Cartao executar(SolicitarCartaoEntrada entrada) {
+        CPF cpf = new CPF(entrada.cpf());
+        DataDeNascimento nascimento = new DataDeNascimento(entrada.dataNascimento());
+        RendaMensal renda = new RendaMensal(entrada.rendaMensal());
+        var tipo = TipoCartao.valueOf(entrada.tipoCartao().toUpperCase());
+        var bandeira = BandeiraCartao.valueOf(entrada.bandeiraCartao().toUpperCase());
 
-        Cartao novo = Cartao.solicitar(cpf, input.nomeCompleto(), nascimento, renda, tipo, bandeira);
+        Cartao novo = Cartao.solicitar(cpf, entrada.nomeCompleto(), nascimento, renda, tipo, bandeira);
 
         repository.salvar(novo);
         return novo;

@@ -86,17 +86,22 @@ public class Cartao {
             throw new IllegalArgumentException("Senha antiga não confere.");
         }
 
-        if (!(status == StatusCartao.ATIVO)) {
-            throw new IllegalStateException("Senha não pode ser alterada até o cartão estar ativado. Status atual: " + status);
+        if (status != StatusCartao.ATIVO) {
+            throw new IllegalStateException("Somente cartões ativados poder ter a senha redefinida. Status atual: " + status);
         }
 
         this.senha = senhaNova;
     }
 
-    public void bloquearTemporariamente(String motivo) {
-        if (this.status != StatusCartao.ATIVO) {
-            throw new RuntimeException("Somente cartões ativos podem ser bloqueados temporariamente");
+    public void bloquearTemporariamente(CPF cpfInformado, String motivo) {
+        if (!this.cpf.equals(cpfInformado)) {
+            throw new IllegalArgumentException("CPF não confere com o cartão.");
         }
+
+        if (this.status != StatusCartao.ATIVO) {
+            throw new RuntimeException("Somente cartões ativos podem ser bloqueados temporariamente. Status atual: " + status);
+        }
+
         this.status = StatusCartao.BLOQUEADO_TEMPORARIO;
         this.motivoBloqueio = motivo;
     }
