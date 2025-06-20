@@ -4,8 +4,11 @@ import com.cesupa.cardsystem.application.usecase.SolicitarCartaoUseCase;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
-public class RodarAplicacaoLote  implements  CommandLineRunner{
+public class RodarAplicacaoLote implements CommandLineRunner {
+
     private final SolicitarCartaoUseCase solicitarCartaoUseCase;
 
     public RodarAplicacaoLote(SolicitarCartaoUseCase solicitarCartaoUseCase) {
@@ -14,15 +17,30 @@ public class RodarAplicacaoLote  implements  CommandLineRunner{
 
     @Override
     public void run(String... args) {
-        System.out.println("🟢 Iniciando processamento em lote...");
+        
+        if (args.length > 0 && args[0].toUpperCase().endsWith(".IN")) {
+            System.out.println("Iniciando processamento em lote...");
+            
+            String caminhoArquivo = args[0];
+            String nomeArquivo = caminhoArquivo.substring(caminhoArquivo.lastIndexOf("/") + 1); // ou '\\' no Windows
+            String dataSolicitacao = nomeArquivo.substring(4, 12); // CARD20230619001.IN → "20230619"
 
-        if (args.length > 0 && args[0].endsWith(".txt")) {
-            var reader = new LeitorArquivoLote();
-            var processor = new ProcessarArquivoLote(solicitarCartaoUseCase);
-            var registros = reader.ler(args[0]);
-            processor.processar(registros);
-        }else {
-            System.out.println("ℹ️ Nenhum arquivo .txt informado. API rodando normalmente.");
+            var leitor = new LeitorArquivoLote();
+            var registros = leitor.ler(caminhoArquivo);
+
+            var processador = new ProcessarArquivoLote(solicitarCartaoUseCase);
+            List<RegistroErroLote> erros = processador.processar(registros, dataSolicitacao);
+
+            if (!erros.isEmpty()) {
+                String caminhoErr = caminhoArquivo.replace(".IN", ".ERR");
+                new GravadorArquivoErro().gravar(erros, caminhoErr);
+                System.out.println("Arquivo de erro gerado: " + caminhoErr);
+            } else {
+                System.out.println("Processamento concluído sem erros.");
+            }
+
+        } else {
+            System.out.println("Nenhum arquivo .IN informado. API rodando normalmente.");
         }
     }
 }

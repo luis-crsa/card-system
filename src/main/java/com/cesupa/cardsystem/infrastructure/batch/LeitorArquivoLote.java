@@ -7,24 +7,28 @@ import java.util.List;
 
 public class LeitorArquivoLote {
 
-    public List<RegistroLote> ler(String caminhoArquivo) {
-        List<RegistroLote> registros = new ArrayList<>();
+    public List<RegistroSolicitacaoLote> ler(String caminho) {
+        List<RegistroSolicitacaoLote> registros = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(caminho))) {
             String linha;
-            while ((linha = br.readLine()) != null) {
-                String[] campos = linha.split(";");
-                if (campos.length == 6) {
-                    registros.add(new RegistroLote(
-                            campos[0], campos[1], campos[2], campos[3], campos[4], campos[5]));
-                }else{
-                    throw new IllegalArgumentException("Número de campos inválido. Esperado 6, encontrado " + campos.length);
-                }
+            while ((linha = reader.readLine()) != null) {
+                if (linha.isBlank()) continue;
+
+                registros.add(new RegistroSolicitacaoLote(
+                        linha.substring(0, 2),
+                        linha.substring(2, 13),
+                        linha.substring(13, 53).trim(),
+                        linha.substring(53, 61),
+                        linha.substring(61, 71),
+                        linha.substring(71, 81).trim(),
+                        linha.substring(81, 91).trim()
+                ));
             }
+
+            return registros;
         } catch (Exception e) {
             throw new RuntimeException("Erro ao ler o arquivo de lote", e);
         }
-
-        return registros;
     }
 }
