@@ -3,6 +3,10 @@ package com.cesupa.cardsystem.domain.entity;
 import com.cesupa.cardsystem.domain.enums.BandeiraCartao;
 import com.cesupa.cardsystem.domain.enums.StatusCartao;
 import com.cesupa.cardsystem.domain.enums.TipoCartao;
+import com.cesupa.cardsystem.domain.exception.CpfInvalidoException;
+import com.cesupa.cardsystem.domain.exception.RendaInvalidaException;
+import com.cesupa.cardsystem.domain.exception.SenhaInvalidaException;
+import com.cesupa.cardsystem.domain.exception.StatusInvalidoException;
 import com.cesupa.cardsystem.domain.vo.CPF;
 import com.cesupa.cardsystem.domain.vo.DataDeNascimento;
 import com.cesupa.cardsystem.domain.vo.RendaMensal;
@@ -44,7 +48,7 @@ public class Cartao {
                                    RendaMensal renda, TipoCartao tipo, BandeiraCartao bandeira){
 
         if (!renda.atendeMinimoPara(tipo)) {
-            throw new IllegalArgumentException("Renda insuficiente para tipo de cartão solicitado.");
+            throw new RendaInvalidaException("Renda insuficiente para tipo de cartão solicitado.");
         }
 
         String numeroGerado = gerarNumero();
@@ -66,11 +70,11 @@ public class Cartao {
   
     public void ativar(CPF cpfInformado, Senha senhaInformada) {
         if (!this.cpf.equals(cpfInformado)) {
-            throw new IllegalArgumentException("CPF não confere com o cartão.");
+            throw new CpfInvalidoException("CPF não confere com o cartão.");
         }
 
         if (!(status == StatusCartao.APROVADO || status == StatusCartao.ENTREGUE)) {
-            throw new IllegalStateException("Cartão não pode ser ativado. Status atual: " + status);
+            throw new StatusInvalidoException("Cartão não pode ser ativado. Status atual: " + status);
         }
 
         this.senha = senhaInformada;
@@ -79,15 +83,15 @@ public class Cartao {
 
     public void redefinirSenha(CPF cpfInformado, Senha senhaAntiga, Senha senhaNova){
         if (!this.cpf.equals(cpfInformado)) {
-            throw new IllegalArgumentException("CPF não confere com o cartão.");
+            throw new CpfInvalidoException("CPF não confere com o cartão.");
         }
 
         if (!this.senha.equals(senhaAntiga)){
-            throw new IllegalArgumentException("Senha antiga não confere.");
+            throw new SenhaInvalidaException("Senha antiga não confere.");
         }
 
         if (status != StatusCartao.ATIVO) {
-            throw new IllegalStateException("Somente cartões ativados poder ter a senha redefinida. Status atual: " + status);
+            throw new StatusInvalidoException("Somente cartões ativos poder ter a senha redefinida. Status atual: " + status);
         }
 
         this.senha = senhaNova;
@@ -95,11 +99,11 @@ public class Cartao {
 
     public void bloquearTemporariamente(CPF cpfInformado, String motivo) {
         if (!this.cpf.equals(cpfInformado)) {
-            throw new IllegalArgumentException("CPF não confere com o cartão.");
+            throw new CpfInvalidoException("CPF não confere com o cartão.");
         }
 
         if (this.status != StatusCartao.ATIVO) {
-            throw new RuntimeException("Somente cartões ativos podem ser bloqueados temporariamente. Status atual: " + status);
+            throw new StatusInvalidoException("Somente cartões ativos podem ser bloqueados temporariamente. Status atual: " + status);
         }
 
         this.status = StatusCartao.BLOQUEADO_TEMPORARIO;

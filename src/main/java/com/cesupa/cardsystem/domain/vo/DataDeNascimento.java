@@ -1,12 +1,14 @@
 package com.cesupa.cardsystem.domain.vo;
 
+import com.cesupa.cardsystem.domain.exception.IdadeInvalidaException;
+
 import java.time.LocalDate;
 import java.time.Period;
 
 public record DataDeNascimento(LocalDate data) {
     public DataDeNascimento {
         if (!maiorDeIdade(data)) {
-            throw new IllegalArgumentException("Cliente deve ser maior de 18 anos.");
+            throw new IdadeInvalidaException();
         }
     }
 
@@ -14,4 +16,3 @@ public record DataDeNascimento(LocalDate data) {
         return Period.between(nascimento, LocalDate.now()).getYears() >= 18;
     }
 }
-
