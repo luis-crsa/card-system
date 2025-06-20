@@ -8,9 +8,6 @@ public record Senha(String valor) {
     }
 
     private void validar(String valor) {
-        if (valor == null || !valor.matches("\\d{6}")) {
-            throw new IllegalArgumentException("Senha deve ter exatamente 6 dígitos.");
-        }
         if ("123456".equals(valor) || "654321".equals(valor)) {
             throw new IllegalArgumentException("Senha não pode ser sequência.");
         }
