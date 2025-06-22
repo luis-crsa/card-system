@@ -1,10 +1,12 @@
 package com.cesupa.cardsystem.domain.vo;
 
+import com.cesupa.cardsystem.domain.exception.CpfInvalidoException;
+
 public record CPF(String valor) {
 
     public CPF {
         if (!isValid(valor)) {
-            throw new IllegalArgumentException("CPF inválido");
+            throw new CpfInvalidoException("CPF inválido");
         }
     }
 
