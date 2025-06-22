@@ -1,6 +1,6 @@
-package com.cesupa.cardsystem.infrastructure.batch;
+package com.cesupa.cardsystem.infrastructure.batch.registros;
 
-public record RegistroErroLote(
+public record RegistroErro(
         String tipoRegistro,
         String dataSolicitacao,
         String idTransacao,

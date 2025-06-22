@@ -1,6 +1,6 @@
-package com.cesupa.cardsystem.infrastructure.batch;
+package com.cesupa.cardsystem.infrastructure.batch.registros;
 
-public record RegistroSolicitacaoLote(
+public record RegistroSolicitacao(
         String tipoRegistro,
         String cpf,
         String nomeCompleto,

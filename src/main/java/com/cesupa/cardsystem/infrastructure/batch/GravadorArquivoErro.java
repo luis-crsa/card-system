@@ -1,5 +1,7 @@
 package com.cesupa.cardsystem.infrastructure.batch;
 
+import com.cesupa.cardsystem.infrastructure.batch.registros.RegistroErro;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -7,9 +9,9 @@ import java.util.List;
 
 public class GravadorArquivoErro {
 
-    public void gravar(List<RegistroErroLote> erros, String caminhoArquivo) {
+    public void gravar(List<RegistroErro> erros, String caminhoArquivo) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminhoArquivo))) {
-            for (RegistroErroLote erro : erros) {
+            for (RegistroErro erro : erros) {
                 String linha = formatarLinhaErro(erro);
                 writer.write(linha);
                 writer.newLine();
@@ -19,7 +21,7 @@ public class GravadorArquivoErro {
         }
     }
 
-    private String formatarLinhaErro(RegistroErroLote erro) {
+    private String formatarLinhaErro(RegistroErro erro) {
         return String.format(
                 "%-2s%-8s%-6s%-10s%-100s",
                 erro.tipoRegistro(),

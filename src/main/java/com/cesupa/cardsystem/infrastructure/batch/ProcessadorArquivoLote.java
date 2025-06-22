@@ -4,6 +4,8 @@ import com.cesupa.cardsystem.application.usecase.SolicitarCartaoUseCase;
 import com.cesupa.cardsystem.application.usecase.dto.SolicitarCartaoEntrada;
 import com.cesupa.cardsystem.domain.exception.CpfInvalidoException;
 import com.cesupa.cardsystem.domain.exception.IdadeInvalidaException;
+import com.cesupa.cardsystem.infrastructure.batch.registros.RegistroErro;
+import com.cesupa.cardsystem.infrastructure.batch.registros.RegistroSolicitacao;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -11,19 +13,19 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProcessarArquivoLote {
+public class ProcessadorArquivoLote {
 
     private final SolicitarCartaoUseCase solicitarCartaoUseCase;
 
-    public ProcessarArquivoLote(SolicitarCartaoUseCase solicitarCartaoUseCase) {
+    public ProcessadorArquivoLote(SolicitarCartaoUseCase solicitarCartaoUseCase) {
         this.solicitarCartaoUseCase = solicitarCartaoUseCase;
     }
 
-    public List<RegistroErroLote> processar(List<RegistroSolicitacaoLote> registros, String dataSolicitacao) {
-        List<RegistroErroLote> erros = new ArrayList<>();
+    public List<RegistroErro> processar(List<RegistroSolicitacao> registros, String dataSolicitacao) {
+        List<RegistroErro> erros = new ArrayList<>();
 
         for (int i = 0; i < registros.size(); i++) {
-            RegistroSolicitacaoLote registro = registros.get(i);
+            RegistroSolicitacao registro = registros.get(i);
             String idTransacao = String.format("%06d", i + 1);
 
             try {
@@ -41,7 +43,7 @@ public class ProcessarArquivoLote {
                 solicitarCartaoUseCase.executar(entrada);
 
             } catch (CpfInvalidoException e) {
-                erros.add(new RegistroErroLote(
+                erros.add(new RegistroErro(
                         registro.tipoRegistro(),
                         dataSolicitacao,
                         idTransacao,
@@ -49,7 +51,7 @@ public class ProcessarArquivoLote {
                         "CPF inválido"
                 ));
             } catch (IdadeInvalidaException e) {
-                erros.add(new RegistroErroLote(
+                erros.add(new RegistroErro(
                         registro.tipoRegistro(),
                         dataSolicitacao,
                         idTransacao,
@@ -57,7 +59,7 @@ public class ProcessarArquivoLote {
                         "Idade menor que 18 anos"
                 ));
             } catch (Exception e) {
-                erros.add(new RegistroErroLote(
+                erros.add(new RegistroErro(
                         registro.tipoRegistro(),
                         dataSolicitacao,
                         idTransacao,
