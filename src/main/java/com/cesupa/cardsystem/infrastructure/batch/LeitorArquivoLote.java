@@ -26,7 +26,7 @@ public class LeitorArquivoLote {
                 throw new RuntimeException("Arquivo de lote vazio.");
             }
 
-            String primeiraLinha = linhas.get(0);
+            String primeiraLinha = linhas.getFirst();
             if (!primeiraLinha.startsWith("00")) {
                 throw new RuntimeException("A primeira linha não é HEADER (00).");
             }
@@ -37,7 +37,7 @@ public class LeitorArquivoLote {
                     primeiraLinha.substring(10, 16).trim()
             );
 
-            String ultimaLinha = linhas.get(linhas.size() - 1);
+            String ultimaLinha = linhas.getLast();
             if (!ultimaLinha.startsWith("99")) {
                 throw new RuntimeException("A última linha não é TRAILER (99).");
             }

@@ -1,7 +1,10 @@
 package com.cesupa.cardsystem.infrastructure.batch;
 
+import com.cesupa.cardsystem.application.usecase.BloquearCartaoUseCase;
+import com.cesupa.cardsystem.application.usecase.CancelarCartaoUseCase;
 import com.cesupa.cardsystem.application.usecase.SolicitarCartaoUseCase;
 import com.cesupa.cardsystem.infrastructure.batch.registros.RegistroErro;
+import com.cesupa.cardsystem.infrastructure.batch.registros.RegistroCompleto;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -11,26 +14,28 @@ import java.util.List;
 public class RodarAplicacaoLote implements CommandLineRunner {
 
     private final SolicitarCartaoUseCase solicitarCartaoUseCase;
-
-    public RodarAplicacaoLote(SolicitarCartaoUseCase solicitarCartaoUseCase) {
+    private final BloquearCartaoUseCase bloquearCartaoUseCase;
+    private final CancelarCartaoUseCase cancelarCartaoUseCase;
+    
+    public RodarAplicacaoLote(SolicitarCartaoUseCase solicitarCartaoUseCase, BloquearCartaoUseCase bloquearCartaoUseCase, CancelarCartaoUseCase cancelarCartaoUseCase) {
         this.solicitarCartaoUseCase = solicitarCartaoUseCase;
+        this.bloquearCartaoUseCase = bloquearCartaoUseCase;
+        this.cancelarCartaoUseCase = cancelarCartaoUseCase;
     }
 
     @Override
     public void run(String... args) {
-        
+
         if (args.length > 0 && args[0].toUpperCase().endsWith(".IN")) {
             System.out.println("Iniciando processamento em lote...");
-            
+
             String caminhoArquivo = args[0];
-            String nomeArquivo = caminhoArquivo.substring(caminhoArquivo.lastIndexOf("/") + 1);
-            String dataSolicitacao = nomeArquivo.substring(4, 12);
 
-            var leitor = new LeitorArquivoLote();
-            var registros = leitor.ler(caminhoArquivo);
+            LeitorArquivoLote leitor = new LeitorArquivoLote();
+            RegistroCompleto registros = leitor.ler(caminhoArquivo);
 
-            var processador = new ProcessadorArquivoLote(solicitarCartaoUseCase);
-            List<RegistroErro> erros = processador.processar(registros, dataSolicitacao);
+            ProcessadorArquivoLote processador = new ProcessadorArquivoLote(solicitarCartaoUseCase, bloquearCartaoUseCase, cancelarCartaoUseCase);
+            List<RegistroErro> erros = processador.processar(registros);
 
             if (!erros.isEmpty()) {
                 String caminhoErr = caminhoArquivo.replace(".IN", ".ERR");
