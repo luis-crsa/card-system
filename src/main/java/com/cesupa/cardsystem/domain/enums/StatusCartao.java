@@ -5,5 +5,6 @@ public enum StatusCartao {
     APROVADO,
     ENTREGUE,
     ATIVO,
-    BLOQUEADO_TEMPORARIO
+    BLOQUEADO_TEMPORARIO,
+    CANCELADO
 }
