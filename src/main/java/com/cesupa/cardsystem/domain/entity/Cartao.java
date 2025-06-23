@@ -11,6 +11,7 @@ import com.cesupa.cardsystem.domain.vo.CPF;
 import com.cesupa.cardsystem.domain.vo.DataDeNascimento;
 import com.cesupa.cardsystem.domain.vo.RendaMensal;
 import com.cesupa.cardsystem.domain.vo.Senha;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.UUID;
 
@@ -81,21 +82,27 @@ public class Cartao {
         this.status = StatusCartao.ATIVO;
     }
 
-    public void redefinirSenha(CPF cpfInformado, Senha senhaAntiga, Senha senhaNova){
+    public void redefinirSenha(CPF cpfInformado, String senhaAntiga, String senhaNova, PasswordEncoder passwordEncoder) {
         if (!this.cpf.equals(cpfInformado)) {
-            throw new CpfInvalidoException("CPF não confere com o cartão.");
+            throw new CpfInvalidoException("CPF não corresponde ao titular do cartão.");
         }
 
-        if (!this.senha.equals(senhaAntiga)){
+        if (!passwordEncoder.matches(senhaAntiga, this.senha.valor())) {
             throw new SenhaInvalidaException("Senha antiga não confere.");
+        }
+
+        if (senhaAntiga.equals(senhaNova)) {
+            throw new SenhaInvalidaException("A nova senha deve ser diferente da anterior.");
         }
 
         if (status != StatusCartao.ATIVO) {
             throw new StatusInvalidoException("Somente cartões ativos poder ter a senha redefinida. Status atual: " + status);
         }
 
-        this.senha = senhaNova;
+        String novaHash = passwordEncoder.encode(senhaNova);
+        this.senha = new Senha(novaHash);
     }
+
 
     public void bloquearTemporariamente(CPF cpfInformado, String motivo) {
         if (!this.cpf.equals(cpfInformado)) {

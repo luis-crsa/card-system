@@ -6,6 +6,10 @@ import com.cesupa.cardsystem.infrastructure.persistence.CartaoJpaRepository;
 import com.cesupa.cardsystem.infrastructure.persistence.ImplementacaoCartaoRepositoryJpa;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class BeansConfiguration {
@@ -17,12 +21,12 @@ public class BeansConfiguration {
   
     @Bean
     public AtivarCartaoUseCase ativarCartaoUseCase(CartaoRepository repository) {
-        return new AtivarCartaoUseCase(repository);
+        return new AtivarCartaoUseCase(repository, passwordEncoder());
     }
 
     @Bean
     public RedefinirSenhaUseCase redefinirSenhaUseCase(CartaoRepository repository) {
-        return new RedefinirSenhaUseCase(repository);
+        return new RedefinirSenhaUseCase(repository, passwordEncoder());
     }
 
     @Bean
@@ -38,5 +42,21 @@ public class BeansConfiguration {
     @Bean
     public CancelarCartaoUseCase cancelarCartaoUseCase(CartaoRepository cartaoRepository) {
         return new CancelarCartaoUseCase(cartaoRepository);
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().permitAll()
+                );
+
+        return http.build();
     }
 }
