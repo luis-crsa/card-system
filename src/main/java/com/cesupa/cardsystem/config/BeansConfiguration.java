@@ -35,6 +35,11 @@ public class BeansConfiguration {
     }
 
     @Bean
+    public ComunicarPerdaRouboUseCase comunicarPerdaRouboUseCase(CartaoRepository repository){
+        return new ComunicarPerdaRouboUseCase(repository);
+    }
+
+    @Bean
     public CartaoRepository cartaoRepository(CartaoJpaRepository jpa) {
         return new ImplementacaoCartaoRepositoryJpa(jpa);
     }

@@ -26,6 +26,7 @@ public class CartaoEntityMapper {
             entity.setSenha(null);
         }
         entity.setMotivoBloqueio(domain.getMotivoBloqueio());
+        entity.setTipoDeOcorrencia(domain.getTipoDeOcorrencia());
         return entity;
     }
 
@@ -43,7 +44,8 @@ public class CartaoEntityMapper {
                 entity.getNumero(),
                 entity.getStatus(),
                 senha,
-                entity.getMotivoBloqueio()
+                entity.getMotivoBloqueio(),
+                entity.getTipoDeOcorrencia()
         );
     }
 

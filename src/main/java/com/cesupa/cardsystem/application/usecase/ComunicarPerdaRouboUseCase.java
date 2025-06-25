@@ -1,25 +1,26 @@
 package com.cesupa.cardsystem.application.usecase;
 
-import com.cesupa.cardsystem.application.usecase.dto.BloquearCartaoEntrada;
+import com.cesupa.cardsystem.application.usecase.dto.ComunicarPerdaRouboEntrada;
 import com.cesupa.cardsystem.domain.entity.Cartao;
+import com.cesupa.cardsystem.domain.enums.TipoDeOcorrencia;
 import com.cesupa.cardsystem.domain.exception.CartaoNaoEncontradoException;
 import com.cesupa.cardsystem.domain.repository.CartaoRepository;
 import com.cesupa.cardsystem.domain.vo.CPF;
 
-public class BloquearCartaoUseCase {
+public class ComunicarPerdaRouboUseCase {
 
     private final CartaoRepository repository;
 
-    public BloquearCartaoUseCase(CartaoRepository cartaoRepository) {
-        this.repository = cartaoRepository;
+    public ComunicarPerdaRouboUseCase(CartaoRepository repository) {
+        this.repository = repository;
     }
 
-    public Cartao executar(BloquearCartaoEntrada entrada) {
+    public Cartao executar(ComunicarPerdaRouboEntrada entrada) {
         CPF cpf = new CPF(entrada.cpf());
-        String motivo = entrada.motivo();
+        var tipoDeOcorrencia = TipoDeOcorrencia.valueOf(entrada.tipoDeOcorrencia().toUpperCase());
 
         Cartao cartao = repository.buscarPorNumero(entrada.numero()).orElseThrow(CartaoNaoEncontradoException::new);
-        cartao.bloquearTemporariamente(cpf, motivo);
+        cartao.comunicacaoPerdaRoubo(cpf, tipoDeOcorrencia);
         repository.salvar(cartao);
         return cartao;
     }

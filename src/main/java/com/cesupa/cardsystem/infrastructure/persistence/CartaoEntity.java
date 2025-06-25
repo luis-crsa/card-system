@@ -3,6 +3,7 @@ package com.cesupa.cardsystem.infrastructure.persistence;
 import com.cesupa.cardsystem.domain.enums.BandeiraCartao;
 import com.cesupa.cardsystem.domain.enums.StatusCartao;
 import com.cesupa.cardsystem.domain.enums.TipoCartao;
+import com.cesupa.cardsystem.domain.enums.TipoDeOcorrencia;
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -37,6 +38,9 @@ public class CartaoEntity {
 
     private String senha;
     private String motivoBloqueio;
+
+    @Enumerated(EnumType.STRING)
+    private TipoDeOcorrencia tipoDeOcorrencia;
 
     public UUID getId() {
         return id;
@@ -124,5 +128,13 @@ public class CartaoEntity {
 
     public void setMotivoBloqueio(String motivoBloqueio) {
         this.motivoBloqueio = motivoBloqueio;
+    }
+
+    public TipoDeOcorrencia getTipoDeOcorrencia() {
+        return tipoDeOcorrencia;
+    }
+
+    public void setTipoDeOcorrencia(TipoDeOcorrencia tipoDeOcorrencia) {
+        this.tipoDeOcorrencia = tipoDeOcorrencia;
     }
 }
