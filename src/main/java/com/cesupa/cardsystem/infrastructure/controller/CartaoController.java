@@ -3,11 +3,8 @@ package com.cesupa.cardsystem.infrastructure.controller;
 import com.cesupa.cardsystem.application.usecase.*;
 import com.cesupa.cardsystem.dto.*;
 import com.cesupa.cardsystem.infrastructure.mapper.CartaoMapper;
-import com.cesupa.cardsystem.application.usecase.dto.BloquearCartaoEntrada;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
 
 @RestController
 @RequestMapping("/cartoes")
@@ -18,13 +15,20 @@ public class CartaoController {
     private final RedefinirSenhaUseCase redefinirSenhaUseCase;
     private final BloquearCartaoUseCase bloquearCartaoUseCase;
     private final CancelarCartaoUseCase cancelarCartaoUseCase;
+    private final ComunicarPerdaRouboUseCase comunicarPerdaRouboUseCase;
 
-    public CartaoController(SolicitarCartaoUseCase solicitarCartaoUseCase, AtivarCartaoUseCase ativarCartaoUseCase, RedefinirSenhaUseCase redefinirSenhaUseCase, BloquearCartaoUseCase bloquearCartaoUseCase, CancelarCartaoUseCase cancelarCartaoUseCase) {
+    public CartaoController(SolicitarCartaoUseCase solicitarCartaoUseCase,
+                            AtivarCartaoUseCase ativarCartaoUseCase,
+                            RedefinirSenhaUseCase redefinirSenhaUseCase,
+                            BloquearCartaoUseCase bloquearCartaoUseCase,
+                            CancelarCartaoUseCase cancelarCartaoUseCase,
+                            ComunicarPerdaRouboUseCase comunicarPerdaRouboUseCase) {
         this.solicitarCartaoUseCase = solicitarCartaoUseCase;
         this.ativarCartaoUseCase = ativarCartaoUseCase;
         this.redefinirSenhaUseCase = redefinirSenhaUseCase;
         this.bloquearCartaoUseCase = bloquearCartaoUseCase;
         this.cancelarCartaoUseCase = cancelarCartaoUseCase;
+        this.comunicarPerdaRouboUseCase = comunicarPerdaRouboUseCase;
     }
 
     @PostMapping("/solicitar")
@@ -56,6 +60,14 @@ public class CartaoController {
         var input = CartaoMapper.bloquearToInput(dto);
         var cartao = bloquearCartaoUseCase.executar(input);
         var resposta = CartaoMapper.toMotivoResponse(cartao);
+        return ResponseEntity.ok(resposta);
+    }
+
+    @PutMapping("/comunicar-perda-roubo")
+    public ResponseEntity<CartaoTipoOcorrenciaResponseDTO> comunicarPerdaRoubo(@RequestBody ComunicarPerdaRouboRequestDTO dto) {
+        var input = CartaoMapper.comunicarToInput(dto);
+        var cartao = comunicarPerdaRouboUseCase.executar(input);
+        var resposta = CartaoMapper.toOcorrenciaResponse(cartao);
         return ResponseEntity.ok(resposta);
     }
 

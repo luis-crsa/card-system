@@ -42,6 +42,22 @@ public class CartaoMapper {
         );
     }
 
+    public static ComunicarPerdaRouboEntrada comunicarToInput(ComunicarPerdaRouboRequestDTO dto){
+        return new ComunicarPerdaRouboEntrada(
+                dto.numero(),
+                dto.cpf(),
+                dto.tipoDeOcorrencia()
+        );
+    }
+
+    public static CancelarCartaoEntrada cancelarToInput(CancelarCartaoRequestDTO dto) {
+        return new CancelarCartaoEntrada(
+                dto.numero(),
+                dto.cpf(),
+                dto.motivo()
+        );
+    }
+
     public static CartaoResponseDTO toResponse(Cartao cartao) {
         return new CartaoResponseDTO(
                 cartao.getId(),
@@ -72,12 +88,12 @@ public class CartaoMapper {
         );
     }
 
-    public static CancelarCartaoEntrada cancelarToInput(CancelarCartaoRequestDTO dto) {
-        return new CancelarCartaoEntrada(
-                dto.numero(),
-                dto.cpf(),
-                dto.motivo()
+    public static CartaoTipoOcorrenciaResponseDTO toOcorrenciaResponse(Cartao cartao) {
+        return new CartaoTipoOcorrenciaResponseDTO(
+                cartao.getId(),
+                cartao.getNumero(),
+                cartao.getStatus().name(),
+                cartao.getTipoDeOcorrencia().name()
         );
     }
 }
-

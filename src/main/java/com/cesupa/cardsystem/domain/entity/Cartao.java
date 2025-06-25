@@ -3,6 +3,7 @@ package com.cesupa.cardsystem.domain.entity;
 import com.cesupa.cardsystem.domain.enums.BandeiraCartao;
 import com.cesupa.cardsystem.domain.enums.StatusCartao;
 import com.cesupa.cardsystem.domain.enums.TipoCartao;
+import com.cesupa.cardsystem.domain.enums.TipoDeOcorrencia;
 import com.cesupa.cardsystem.domain.exception.CpfInvalidoException;
 import com.cesupa.cardsystem.domain.exception.RendaInvalidaException;
 import com.cesupa.cardsystem.domain.exception.SenhaInvalidaException;
@@ -28,10 +29,13 @@ public class Cartao {
     private StatusCartao status;
     private Senha senha;
     private String motivoBloqueio;
+    private TipoDeOcorrencia tipoDeOcorrencia;
 
     public Cartao(UUID id, CPF cpf, String nomeCompleto, DataDeNascimento dataNascimento,
                   RendaMensal rendaMensal, TipoCartao tipo, BandeiraCartao bandeira,
-                  String numero, StatusCartao status, Senha senha, String motivoBloqueio) {
+                  String numero, StatusCartao status, Senha senha, String motivoBloqueio,
+                  TipoDeOcorrencia tipoDeOcorrencia
+                  ) {
         this.id = id;
         this.cpf = cpf;
         this.nomeCompleto = nomeCompleto;
@@ -43,6 +47,7 @@ public class Cartao {
         this.status = status;
         this.senha = senha;
         this.motivoBloqueio = motivoBloqueio;
+        this.tipoDeOcorrencia = tipoDeOcorrencia;
     }
 
     public static Cartao solicitar(CPF cpf, String nomeCompleto, DataDeNascimento dataNascimento,
@@ -64,6 +69,7 @@ public class Cartao {
                 bandeira,
                 numeroGerado,
                 StatusCartao.SOLICITADO,
+                null,
                 null,
                 null
         );
@@ -115,6 +121,21 @@ public class Cartao {
 
         this.status = StatusCartao.BLOQUEADO_TEMPORARIO;
         this.motivoBloqueio = motivo;
+    }
+
+    public void comunicacaoPerdaRoubo(CPF cpfInformado, TipoDeOcorrencia tipoDeOcorrencia ){
+        if (!this.cpf.equals(cpfInformado)) {
+            throw new CpfInvalidoException("CPF não confere com o cartão.");
+        }
+
+        if (this.status != StatusCartao.ATIVO) {
+            throw new StatusInvalidoException("Somente cartões ativos podem ser bloqueados por perda ou roubo. Status atual: " + status);
+        }
+
+        this.status = StatusCartao.BLOQUEADO_PERDA_ROUBO;
+        this.tipoDeOcorrencia = tipoDeOcorrencia;
+
+
     }
 
     public void cancelarDefinitivamente(String motivo) {
@@ -172,8 +193,12 @@ public class Cartao {
     public String getMotivoBloqueio() {
         return motivoBloqueio;
     }
-    
+
     public void atribuirId(UUID id) {
         this.id = id;
+    }
+
+    public TipoDeOcorrencia getTipoDeOcorrencia() {
+        return tipoDeOcorrencia;
     }
 }
