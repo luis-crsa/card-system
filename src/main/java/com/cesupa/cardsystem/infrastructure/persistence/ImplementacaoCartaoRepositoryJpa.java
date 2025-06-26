@@ -23,11 +23,6 @@ public class ImplementacaoCartaoRepositoryJpa implements CartaoRepository {
     }
 
     @Override
-    public Optional<Cartao> buscarPorId(UUID id) {
-        return jpa.findById(id).map(CartaoEntityMapper::toDomain);
-    }
-
-    @Override
     public Optional<Cartao> buscarPorNumero(String numero) {
         return jpa.findByNumero(numero).map(CartaoEntityMapper::toDomain);
     }

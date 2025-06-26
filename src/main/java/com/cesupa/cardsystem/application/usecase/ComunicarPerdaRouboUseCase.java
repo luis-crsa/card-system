@@ -19,7 +19,8 @@ public class ComunicarPerdaRouboUseCase {
         CPF cpf = new CPF(entrada.cpf());
         var tipoDeOcorrencia = TipoDeOcorrencia.valueOf(entrada.tipoDeOcorrencia().toUpperCase());
 
-        Cartao cartao = repository.buscarPorNumero(entrada.numero()).orElseThrow(CartaoNaoEncontradoException::new);
+        Cartao cartao = repository.buscarPorNumero(entrada.numero())
+                .orElseThrow(CartaoNaoEncontradoException::new);
         cartao.comunicacaoPerdaRoubo(cpf, tipoDeOcorrencia);
         repository.salvar(cartao);
         return cartao;

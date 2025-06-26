@@ -2,6 +2,7 @@ package com.cesupa.cardsystem.application.usecase;
 
 import com.cesupa.cardsystem.application.usecase.dto.RedefinirSenhaEntrada;
 import com.cesupa.cardsystem.domain.entity.Cartao;
+import com.cesupa.cardsystem.domain.exception.CartaoNaoEncontradoException;
 import com.cesupa.cardsystem.domain.repository.CartaoRepository;
 import com.cesupa.cardsystem.domain.vo.CPF;
 import com.cesupa.cardsystem.domain.vo.Senha;
@@ -18,19 +19,13 @@ public class RedefinirSenhaUseCase {
     }
 
     public Cartao executar(RedefinirSenhaEntrada entrada) {
-        System.out.println("Nova senha recebida: [" + entrada.senhaNova() + "]");
-
-        Cartao cartao = repository.buscarPorNumero(entrada.numero())
-                .orElseThrow(() -> new IllegalArgumentException("Cartão não encontrado."));
-
         CPF cpf = new CPF(entrada.cpf());
-
         Senha novaSenhaValidada = new Senha(entrada.senhaNova());
-
+        
+        Cartao cartao = repository.buscarPorNumero(entrada.numero())
+                .orElseThrow(CartaoNaoEncontradoException::new);
         cartao.redefinirSenha(cpf, entrada.senhaAntiga(), novaSenhaValidada.valor(), passwordEncoder);
-
         repository.salvar(cartao);
-
         return cartao;
     }
 }

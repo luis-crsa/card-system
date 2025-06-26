@@ -15,8 +15,18 @@ import org.springframework.security.web.SecurityFilterChain;
 public class BeansConfiguration {
 
     @Bean
+    public CartaoRepository cartaoRepository(CartaoJpaRepository jpa) {
+        return new ImplementacaoCartaoRepositoryJpa(jpa);
+    }
+
+    @Bean
     public SolicitarCartaoUseCase solicitarCartaoUseCase(CartaoRepository repository) {
         return new SolicitarCartaoUseCase(repository);
+    }
+
+    @Bean
+    public AprovarCartaoUseCase aprovarCartaoUseCase(CartaoRepository repository) {
+        return new AprovarCartaoUseCase(repository);
     }
   
     @Bean
@@ -37,11 +47,6 @@ public class BeansConfiguration {
     @Bean
     public ComunicarPerdaRouboUseCase comunicarPerdaRouboUseCase(CartaoRepository repository){
         return new ComunicarPerdaRouboUseCase(repository);
-    }
-
-    @Bean
-    public CartaoRepository cartaoRepository(CartaoJpaRepository jpa) {
-        return new ImplementacaoCartaoRepositoryJpa(jpa);
     }
 
     @Bean

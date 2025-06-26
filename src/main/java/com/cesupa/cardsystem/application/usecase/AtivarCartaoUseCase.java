@@ -2,6 +2,7 @@ package com.cesupa.cardsystem.application.usecase;
 
 import com.cesupa.cardsystem.application.usecase.dto.AtivarCartaoEntrada;
 import com.cesupa.cardsystem.domain.entity.Cartao;
+import com.cesupa.cardsystem.domain.exception.CartaoNaoEncontradoException;
 import com.cesupa.cardsystem.domain.repository.CartaoRepository;
 import com.cesupa.cardsystem.domain.vo.CPF;
 import com.cesupa.cardsystem.domain.vo.Senha;
@@ -26,7 +27,7 @@ public class AtivarCartaoUseCase {
         Senha senhaCriptografada = new Senha(hash);
 
         Cartao cartao = repository.buscarPorNumero(entrada.numero())
-                .orElseThrow(() -> new IllegalArgumentException("Cartão não encontrado."));
+                .orElseThrow(CartaoNaoEncontradoException::new);
 
         cartao.ativar(cpf, senhaCriptografada);
         repository.salvar(cartao);
