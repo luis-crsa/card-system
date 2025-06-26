@@ -74,13 +74,21 @@ public class Cartao {
                 null
         );
     }
+    
+    public void aprovar(){
+        if (this.status != StatusCartao.SOLICITADO) {
+            throw new StatusInvalidoException("Somente cartões solicitados podem ser aprovados. Status atual: " + status);
+        }
+        
+        this.status = StatusCartao.APROVADO;
+    }
   
     public void ativar(CPF cpfInformado, Senha senhaInformada) {
         if (!this.cpf.equals(cpfInformado)) {
             throw new CpfInvalidoException("CPF não confere com o cartão.");
         }
 
-        if (!(status == StatusCartao.APROVADO || status == StatusCartao.ENTREGUE)) {
+        if (this.status != StatusCartao.APROVADO) {
             throw new StatusInvalidoException("Cartão não pode ser ativado. Status atual: " + status);
         }
 
