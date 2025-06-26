@@ -2,6 +2,7 @@ package com.cesupa.cardsystem.application.usecase;
 
 import com.cesupa.cardsystem.application.usecase.dto.CancelarCartaoEntrada;
 import com.cesupa.cardsystem.domain.entity.Cartao;
+import com.cesupa.cardsystem.domain.exception.CartaoNaoEncontradoException;
 import com.cesupa.cardsystem.domain.repository.CartaoRepository;
 import com.cesupa.cardsystem.domain.vo.CPF;
 
@@ -18,7 +19,7 @@ public class CancelarCartaoUseCase {
         String motivo = entrada.motivo();
 
         Cartao cartao = repository.buscarPorNumero(entrada.numeroCartao())
-                .orElseThrow(() -> new IllegalArgumentException("Cartão não encontrado."));
+                .orElseThrow(CartaoNaoEncontradoException::new);
 
         if (!cartao.getCpf().valor().equals(cpf.valor())) {
             throw new IllegalArgumentException("CPF não corresponde ao titular do cartão.");
