@@ -1,5 +1,6 @@
 package com.cesupa.cardsystem.infrastructure.persistence;
 
+import com.cesupa.cardsystem.domain.enums.TipoTransacao;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -13,6 +14,11 @@ public class LancamentoEntity {
     @Id
     @GeneratedValue
     private UUID id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo", nullable = false)
+    private TipoTransacao tipo;
+
 
     @Column(name = "numero_cartao", nullable = false)
     private String numeroCartao;
@@ -53,6 +59,8 @@ public class LancamentoEntity {
         return valor;
     }
 
+    public TipoTransacao getTipo() { return tipo; }
+
     public void setId(UUID id) {
         this.id = id;
     }
@@ -73,7 +81,7 @@ public class LancamentoEntity {
         this.valor = valor;
     }
 
-    public void setPago(boolean pago) {
-        this.pago = pago;
-    }
+    public void setPago(boolean pago) { this.pago = pago; }
+
+    public void setTipo(TipoTransacao tipo) { this.tipo = tipo; }
 }

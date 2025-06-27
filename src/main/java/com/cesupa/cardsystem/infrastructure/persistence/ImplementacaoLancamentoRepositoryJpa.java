@@ -22,7 +22,8 @@ public class ImplementacaoLancamentoRepositoryJpa implements LancamentoRepositor
                         entity.getData(),
                         entity.getDescricao(),
                         entity.getValor(),
-                        entity.isPago()
+                        entity.isPago(),
+                        entity.getTipo()
                 ))
                 .toList();
     }
