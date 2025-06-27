@@ -1,11 +1,16 @@
 package com.cesupa.cardsystem.infrastructure.controller;
 
 import com.cesupa.cardsystem.application.usecase.*;
+import com.cesupa.cardsystem.domain.enums.TipoTransacao;
 import com.cesupa.cardsystem.dto.*;
 import com.cesupa.cardsystem.infrastructure.mapper.CartaoMapper;
 import com.cesupa.cardsystem.infrastructure.mapper.LancamentoMapper;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -19,6 +24,8 @@ public class CartaoController {
     private final CancelarCartaoUseCase cancelarCartaoUseCase;
     private final ComunicarPerdaRouboUseCase comunicarPerdaRouboUseCase;
     private final ExtratoCartaoUseCase extratoCartaoUseCase;
+    private final FaturaCartaoUseCase faturaCartaoUseCase;
+    private final ExtratoFiltradoUseCase extratoFiltradoUseCase;
 
     public CartaoController(SolicitarCartaoUseCase solicitarCartaoUseCase,
                             AtivarCartaoUseCase ativarCartaoUseCase,
@@ -26,7 +33,9 @@ public class CartaoController {
                             BloquearCartaoUseCase bloquearCartaoUseCase,
                             CancelarCartaoUseCase cancelarCartaoUseCase,
                             ComunicarPerdaRouboUseCase comunicarPerdaRouboUseCase,
-                            ExtratoCartaoUseCase extratoCartaoUseCase) {
+                            ExtratoCartaoUseCase extratoCartaoUseCase,
+                            FaturaCartaoUseCase faturaCartaoUseCase,
+                            ExtratoFiltradoUseCase extratoFiltradoUseCase) {
         this.solicitarCartaoUseCase = solicitarCartaoUseCase;
         this.ativarCartaoUseCase = ativarCartaoUseCase;
         this.redefinirSenhaUseCase = redefinirSenhaUseCase;
@@ -34,6 +43,8 @@ public class CartaoController {
         this.cancelarCartaoUseCase = cancelarCartaoUseCase;
         this.comunicarPerdaRouboUseCase = comunicarPerdaRouboUseCase;
         this.extratoCartaoUseCase = extratoCartaoUseCase;
+        this.faturaCartaoUseCase = faturaCartaoUseCase;
+        this.extratoFiltradoUseCase = extratoFiltradoUseCase;
     }
 
     @PostMapping("/solicitar")
@@ -92,4 +103,24 @@ public class CartaoController {
                 .toList();
         return ResponseEntity.ok(resposta);
     }
+
+    @GetMapping("/fatura/{numeroCartao}")
+    public ResponseEntity<FaturaDTO> consultarFatura(@PathVariable String numeroCartao) {
+        var fatura = faturaCartaoUseCase.executar(numeroCartao);
+        return ResponseEntity.ok(fatura);
+    }
+
+    @GetMapping("/extrato-filtrado")
+    public ResponseEntity<ExtratoFiltradoDTO> consultarFiltrado(
+            @RequestParam String numeroCartao,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim,
+            @RequestParam(required = false) TipoTransacao tipo,
+            @RequestParam(required = false) BigDecimal valorMin,
+            @RequestParam(required = false) BigDecimal valorMax
+    ) {
+        var extrato = extratoFiltradoUseCase.executar(numeroCartao, inicio, fim, tipo, valorMin, valorMax);
+        return ResponseEntity.ok(extrato);
+    }
+
 }
