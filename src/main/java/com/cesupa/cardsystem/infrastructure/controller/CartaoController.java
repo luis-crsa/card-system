@@ -3,8 +3,10 @@ package com.cesupa.cardsystem.infrastructure.controller;
 import com.cesupa.cardsystem.application.usecase.*;
 import com.cesupa.cardsystem.dto.*;
 import com.cesupa.cardsystem.infrastructure.mapper.CartaoMapper;
+import com.cesupa.cardsystem.infrastructure.mapper.LancamentoMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/cartoes")
@@ -16,19 +18,22 @@ public class CartaoController {
     private final BloquearCartaoUseCase bloquearCartaoUseCase;
     private final CancelarCartaoUseCase cancelarCartaoUseCase;
     private final ComunicarPerdaRouboUseCase comunicarPerdaRouboUseCase;
+    private final ExtratoCartaoUseCase extratoCartaoUseCase;
 
     public CartaoController(SolicitarCartaoUseCase solicitarCartaoUseCase,
                             AtivarCartaoUseCase ativarCartaoUseCase,
                             RedefinirSenhaUseCase redefinirSenhaUseCase,
                             BloquearCartaoUseCase bloquearCartaoUseCase,
                             CancelarCartaoUseCase cancelarCartaoUseCase,
-                            ComunicarPerdaRouboUseCase comunicarPerdaRouboUseCase) {
+                            ComunicarPerdaRouboUseCase comunicarPerdaRouboUseCase,
+                            ExtratoCartaoUseCase extratoCartaoUseCase) {
         this.solicitarCartaoUseCase = solicitarCartaoUseCase;
         this.ativarCartaoUseCase = ativarCartaoUseCase;
         this.redefinirSenhaUseCase = redefinirSenhaUseCase;
         this.bloquearCartaoUseCase = bloquearCartaoUseCase;
         this.cancelarCartaoUseCase = cancelarCartaoUseCase;
         this.comunicarPerdaRouboUseCase = comunicarPerdaRouboUseCase;
+        this.extratoCartaoUseCase = extratoCartaoUseCase;
     }
 
     @PostMapping("/solicitar")
@@ -76,6 +81,15 @@ public class CartaoController {
         var input = CartaoMapper.cancelarToInput(dto);
         var cartao = cancelarCartaoUseCase.executar(input);
         var resposta = CartaoMapper.toMotivoResponse(cartao);
+        return ResponseEntity.ok(resposta);
+    }
+
+    @GetMapping("/extrato/{numeroCartao}")
+    public ResponseEntity<List<LancamentoDTO>> consultarExtrato(@PathVariable String numeroCartao) {
+        var lancamentos = extratoCartaoUseCase.executar(numeroCartao);
+        var resposta = lancamentos.stream()
+                .map(LancamentoMapper::toDTO)
+                .toList();
         return ResponseEntity.ok(resposta);
     }
 }
