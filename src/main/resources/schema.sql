@@ -16,9 +16,11 @@ CREATE TABLE IF NOT EXISTS cartoes (
     );
 
 CREATE TABLE IF NOT EXISTS lancamentos (
-   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-   numero_cartao VARCHAR(16) NOT NULL,
-   data DATE NOT NULL,
-   descricao TEXT NOT NULL,
-   valor NUMERIC(10, 2) NOT NULL
-   );
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    numero_cartao VARCHAR(16) NOT NULL,
+    data DATE NOT NULL,
+    descricao TEXT NOT NULL,
+    valor NUMERIC(10, 2) NOT NULL,
+    pago BOOLEAN NOT NULL DEFAULT FALSE
+    );
+
