@@ -11,10 +11,14 @@ public class CancelarCartaoUseCase {
 
     private final CartaoRepository repository;
     private final LancamentoRepository lancamentoRepository;
+    private final FaturaCartaoUseCase faturaCartaoUseCase;
 
-    public CancelarCartaoUseCase(CartaoRepository repository, LancamentoRepository lancamentoRepository) {
+    public CancelarCartaoUseCase(CartaoRepository repository,
+                                 LancamentoRepository lancamentoRepository,
+                                 FaturaCartaoUseCase faturaCartaoUseCase) {
         this.repository = repository;
         this.lancamentoRepository = lancamentoRepository;
+        this.faturaCartaoUseCase = faturaCartaoUseCase;
     }
 
     public Cartao executar(CancelarCartaoEntrada entrada) {
@@ -38,7 +42,8 @@ public class CancelarCartaoUseCase {
     }
 
     private boolean temFaturaEmAberto(Cartao cartao) {
-        return !lancamentoRepository.buscarPorNumeroCartao(cartao.getNumero()).stream()
-                .allMatch(Lancamento::isPago);
+        return faturaCartaoUseCase.executar(cartao.getNumero())
+                .status()
+                .equalsIgnoreCase("EM_ABERTO");
     }
 }
