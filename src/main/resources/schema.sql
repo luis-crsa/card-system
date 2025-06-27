@@ -14,3 +14,11 @@ CREATE TABLE IF NOT EXISTS cartoes (
     motivo_bloqueio VARCHAR(255),
     tipo_de_ocorrencia VARCHAR(5)
     );
+
+CREATE TABLE IF NOT EXISTS lancamentos (
+   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+   numero_cartao VARCHAR(16) NOT NULL,
+   data DATE NOT NULL,
+   descricao TEXT NOT NULL,
+   valor NUMERIC(10, 2) NOT NULL
+   );
