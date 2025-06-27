@@ -73,4 +73,14 @@ public class BeansConfiguration {
                                                      LancamentoRepository lancamentoRepository) {
         return new ExtratoCartaoUseCase(cartaoRepository, lancamentoRepository);
     }
+
+    @Bean
+    public FaturaCartaoUseCase faturaCartaoUseCase(LancamentoRepository lancamentoRepository) {
+        return new FaturaCartaoUseCase(lancamentoRepository);
+    }
+
+    @Bean
+    public ExtratoFiltradoUseCase extratoFiltradoUseCase(LancamentoRepository lancamentoRepository) {
+        return new ExtratoFiltradoUseCase(lancamentoRepository);
+    }
 }
