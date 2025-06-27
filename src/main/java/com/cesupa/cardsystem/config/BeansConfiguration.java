@@ -47,9 +47,10 @@ public class BeansConfiguration {
 
     @Bean
     public CancelarCartaoUseCase cancelarCartaoUseCase(CartaoRepository cartaoRepository,
-                                                       LancamentoRepository lancamentoRepository) {
+                                                       LancamentoRepository lancamentoRepository,
+                                                       FaturaCartaoUseCase faturaCartaoUseCase) {
         return new CancelarCartaoUseCase(cartaoRepository,
-                lancamentoRepository);
+                lancamentoRepository, faturaCartaoUseCase);
     }
 
     @Bean
