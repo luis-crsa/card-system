@@ -18,7 +18,12 @@ public class ImplementacaoLancamentoRepositoryJpa implements LancamentoRepositor
     @Override
     public List<Lancamento> buscarPorNumeroCartao(String numeroCartao) {
         return jpaRepository.findByNumeroCartao(numeroCartao).stream()
-                .map(entity -> new Lancamento(entity.getData(), entity.getDescricao(), entity.getValor()))
+                .map(entity -> new Lancamento(
+                        entity.getData(),
+                        entity.getDescricao(),
+                        entity.getValor(),
+                        entity.isPago()
+                ))
                 .toList();
     }
 }

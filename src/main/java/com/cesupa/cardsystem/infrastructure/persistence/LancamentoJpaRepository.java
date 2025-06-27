@@ -6,4 +6,5 @@ import java.util.UUID;
 
 public interface LancamentoJpaRepository extends JpaRepository<LancamentoEntity, UUID> {
     List<LancamentoEntity> findByNumeroCartao(String numeroCartao);
+    List<LancamentoEntity> findByNumeroCartaoAndPagoFalse(String numeroCartao);
 }

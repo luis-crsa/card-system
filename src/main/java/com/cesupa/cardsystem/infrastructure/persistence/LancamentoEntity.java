@@ -26,6 +26,13 @@ public class LancamentoEntity {
     @Column(nullable = false)
     private BigDecimal valor;
 
+    @Column(nullable = false)
+    private boolean pago;
+
+    public boolean isPago() {
+        return pago;
+    }
+
     public UUID getId() {
         return id;
     }
@@ -64,5 +71,9 @@ public class LancamentoEntity {
 
     public void setValor(BigDecimal valor) {
         this.valor = valor;
+    }
+
+    public void setPago(boolean pago) {
+        this.pago = pago;
     }
 }
