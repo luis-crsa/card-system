@@ -3,14 +3,18 @@ package com.cesupa.cardsystem.application.usecase;
 import com.cesupa.cardsystem.application.usecase.dto.CancelarCartaoEntrada;
 import com.cesupa.cardsystem.domain.entity.Cartao;
 import com.cesupa.cardsystem.domain.repository.CartaoRepository;
+import com.cesupa.cardsystem.domain.repository.LancamentoRepository;
 import com.cesupa.cardsystem.domain.vo.CPF;
+import com.cesupa.cardsystem.domain.entity.Lancamento;
 
 public class CancelarCartaoUseCase {
 
     private final CartaoRepository repository;
+    private final LancamentoRepository lancamentoRepository;
 
-    public CancelarCartaoUseCase(CartaoRepository cartaoRepository) {
-        this.repository = cartaoRepository;
+    public CancelarCartaoUseCase(CartaoRepository repository, LancamentoRepository lancamentoRepository) {
+        this.repository = repository;
+        this.lancamentoRepository = lancamentoRepository;
     }
 
     public Cartao executar(CancelarCartaoEntrada entrada) {
@@ -34,6 +38,7 @@ public class CancelarCartaoUseCase {
     }
 
     private boolean temFaturaEmAberto(Cartao cartao) {
-        return false;
+        return !lancamentoRepository.buscarPorNumeroCartao(cartao.getNumero()).stream()
+                .allMatch(Lancamento::isPago);
     }
 }
