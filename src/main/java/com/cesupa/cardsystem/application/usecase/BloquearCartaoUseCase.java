@@ -18,7 +18,8 @@ public class BloquearCartaoUseCase {
         CPF cpf = new CPF(entrada.cpf());
         String motivo = entrada.motivo();
 
-        Cartao cartao = repository.buscarPorNumero(entrada.numero()).orElseThrow(CartaoNaoEncontradoException::new);
+        Cartao cartao = repository.buscarPorNumero(entrada.numero())
+                .orElseThrow(CartaoNaoEncontradoException::new);
         cartao.bloquearTemporariamente(cpf, motivo);
         repository.salvar(cartao);
         return cartao;

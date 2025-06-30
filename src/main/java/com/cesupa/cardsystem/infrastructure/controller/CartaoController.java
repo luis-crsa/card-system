@@ -18,6 +18,7 @@ import java.util.List;
 public class CartaoController {
 
     private final SolicitarCartaoUseCase solicitarCartaoUseCase;
+    private final AprovarCartaoUseCase aprovarCartaoUseCase;
     private final AtivarCartaoUseCase ativarCartaoUseCase;
     private final RedefinirSenhaUseCase redefinirSenhaUseCase;
     private final BloquearCartaoUseCase bloquearCartaoUseCase;
@@ -28,6 +29,7 @@ public class CartaoController {
     private final ExtratoFiltradoUseCase extratoFiltradoUseCase;
 
     public CartaoController(SolicitarCartaoUseCase solicitarCartaoUseCase,
+                            AprovarCartaoUseCase aprovarCartaoUseCase,
                             AtivarCartaoUseCase ativarCartaoUseCase,
                             RedefinirSenhaUseCase redefinirSenhaUseCase,
                             BloquearCartaoUseCase bloquearCartaoUseCase,
@@ -37,6 +39,7 @@ public class CartaoController {
                             FaturaCartaoUseCase faturaCartaoUseCase,
                             ExtratoFiltradoUseCase extratoFiltradoUseCase) {
         this.solicitarCartaoUseCase = solicitarCartaoUseCase;
+        this.aprovarCartaoUseCase = aprovarCartaoUseCase;
         this.ativarCartaoUseCase = ativarCartaoUseCase;
         this.redefinirSenhaUseCase = redefinirSenhaUseCase;
         this.bloquearCartaoUseCase = bloquearCartaoUseCase;
@@ -53,6 +56,12 @@ public class CartaoController {
         var novoCartao = solicitarCartaoUseCase.executar(input);
         var resposta = CartaoMapper.toResponse(novoCartao);
         return ResponseEntity.status(201).body(resposta);
+    }
+
+    @PutMapping("/{numero}/aprovar")
+    public ResponseEntity<String> ativar(@PathVariable String numero) {
+        var resposta = aprovarCartaoUseCase.executar(numero);
+        return ResponseEntity.ok(resposta);
     }
 
     @PutMapping("/ativar")
