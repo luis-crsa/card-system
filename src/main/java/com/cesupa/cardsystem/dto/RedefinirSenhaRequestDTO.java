@@ -5,5 +5,4 @@ public record RedefinirSenhaRequestDTO(
         String cpf,
         String senhaAntiga,
         String senhaNova
-) {
-}
+) {}
