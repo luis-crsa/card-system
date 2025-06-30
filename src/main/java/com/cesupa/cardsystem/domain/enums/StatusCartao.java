@@ -6,5 +6,9 @@ public enum StatusCartao {
     ATIVO,
     BLOQUEADO_TEMPORARIO,
     CANCELADO,
-    BLOQUEADO_PERDA_ROUBO
+    BLOQUEADO_PERDA_ROUBO;
+
+    public boolean podeConsultarExtrato() {
+        return this == ATIVO || this == BLOQUEADO_TEMPORARIO;
+    }
 }

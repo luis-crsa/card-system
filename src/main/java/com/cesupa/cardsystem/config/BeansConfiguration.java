@@ -2,6 +2,7 @@ package com.cesupa.cardsystem.config;
 
 import com.cesupa.cardsystem.application.usecase.*;
 import com.cesupa.cardsystem.domain.repository.CartaoRepository;
+import com.cesupa.cardsystem.domain.repository.LancamentoRepository;
 import com.cesupa.cardsystem.infrastructure.persistence.CartaoJpaRepository;
 import com.cesupa.cardsystem.infrastructure.persistence.ImplementacaoCartaoRepositoryJpa;
 import org.springframework.context.annotation.Bean;
@@ -50,8 +51,11 @@ public class BeansConfiguration {
     }
 
     @Bean
-    public CancelarCartaoUseCase cancelarCartaoUseCase(CartaoRepository cartaoRepository) {
-        return new CancelarCartaoUseCase(cartaoRepository);
+    public CancelarCartaoUseCase cancelarCartaoUseCase(CartaoRepository cartaoRepository,
+                                                       LancamentoRepository lancamentoRepository,
+                                                       FaturaCartaoUseCase faturaCartaoUseCase) {
+        return new CancelarCartaoUseCase(cartaoRepository,
+                lancamentoRepository, faturaCartaoUseCase);
     }
 
     @Bean
@@ -68,5 +72,21 @@ public class BeansConfiguration {
                 );
 
         return http.build();
+    }
+
+    @Bean
+    public ExtratoCartaoUseCase extratoCartaoUseCase(CartaoRepository cartaoRepository,
+                                                     LancamentoRepository lancamentoRepository) {
+        return new ExtratoCartaoUseCase(cartaoRepository, lancamentoRepository);
+    }
+
+    @Bean
+    public FaturaCartaoUseCase faturaCartaoUseCase(LancamentoRepository lancamentoRepository) {
+        return new FaturaCartaoUseCase(lancamentoRepository);
+    }
+
+    @Bean
+    public ExtratoFiltradoUseCase extratoFiltradoUseCase(LancamentoRepository lancamentoRepository) {
+        return new ExtratoFiltradoUseCase(lancamentoRepository);
     }
 }
