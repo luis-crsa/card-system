@@ -1,5 +1,5 @@
 # 💳Sistema de Cartões
-Sistema de gerenciamento do ciclo de vida de cartões bancários, permitindo a solicitação, ativação e cadastro de senha, redefinição de senha, bloqueio e cancelamento. Foi desenvolvido com foco em **Domain-Driven Design (DDD)** e **Clean Architecture**, garantindo separação de responsabilidades, modularidade e clareza no domínio.
+Sistema de gerenciamento do ciclo de vida de cartões bancários, permitindo a solicitação, aprovação, ativação e cadastro de senha, redefinição de senha, bloqueio, cancelamento e acompanhamento de fatura/extrato. Foi desenvolvido com foco em **Domain-Driven Design (DDD)** e **Clean Architecture**, garantindo separação de responsabilidades, modularidade e clareza no domínio.
 
 ## 🛠️Tecnologias utilizadas
 - Java
@@ -37,7 +37,8 @@ Essa modelagem inclui:
         "bandeiraCartao": "MASTERCARD"
     }
     ```
-- **PUT** `/cartoes/ativar` - Realiza a ativação e cadastro de senha do cartão
+- **PUT** `/cartoes/{numero}/aprovar` - Realiza a aprovação do cartão
+- **PUT** `/cartoes/ativar` - Realiza a ativação com cadastro da senha do cartão
     #### Exemplo de corpo de requisição
     ```json
     {
@@ -56,6 +57,15 @@ Essa modelagem inclui:
         "senhaNova": "178977"
     }
     ```
+- **PUT** `/cartoes/comunicar-perda-roubo` - Realiza o bloqueio imediato do cartão em virtude de perda ou roubo
+  #### Exemplo de corpo de requisição
+    ```json
+    {
+      "numero":"9428405014782974",
+      "cpf":"13453830024",
+      "tipoDeOcorrencia":"ROUBO"
+    }
+    ```
 - **PUT** `/cartoes/bloquear-temporariamente` - Realiza o bloqueio temporário do cartão
 - **PUT** `/cartoes/cancelar` - Realiza o cancelamento permanente do cartão
   #### Exemplo de corpo de requisição
@@ -66,6 +76,18 @@ Essa modelagem inclui:
         "motivo": "Suspeita de fraude"
     }
     ```
+- **GET** `/cartoes/fatura/{numeroCartao}` - Realiza o cálculo da fatura do cartão
+- **GET** `/cartoes/extrato/{numeroCartao}` - Realiza a consulta do extrato do cartão
+- **GET** `/cartoes/extrato-filtrado` - Realiza a consulta do extrato do cartão com filtros
+  #### Tipos de filtro (Parâmetros de requisição)
+  | Filtro           | Exemplo                        |
+  |------------------|--------------------------------|
+  | Número do Cartao | ?numeroCartao=9428405014782974 |
+  | Período inicial  | &inicio=2025-06-01             |
+  | Período final    | &final= 2025-06-30             |
+  | Tipo de operação | &tipo=DEBITO                   |
+  | Valor mínimo     | &valorMin=100                  |
+  | Valor máximo     | &valorMax=2000                 |
 
 ## 💻Execução do projeto
 Pré-requisitos: Java 21
