@@ -6,37 +6,47 @@
 
 ### 1.1 Bounded Contexts (Contextos Delimitados)
 
-Para organizar o domínio de cartões de forma coerente e manter a clareza das responsabilidades, o sistema atualmente possui um único contexto delimitado:
+Para organizar o domínio de cartões de forma coerente e manter a clareza das responsabilidades, o sistema atualmente possui dois contextos delimitados:
 
--  **Cartão (Card)**  
-  Responsável por gerenciar o ciclo de vida completo do cartão, desde a solicitação até o bloqueio ou cancelamento.
+-  **Cartão (Cartao)**  
+   Responsável por gerenciar o ciclo de vida completo do cartão, desde a solicitação até o bloqueio ou cancelamento.
+
+-  **Transações (Lancamento)**
+   Responsável pelo registro, consulta e filtragem de transações vinculadas ao cartão, bem como acompanhamento de fatura e extrato.
 
 **Funcionalidades principais:**
 - Solicitação de Cartão
+- Aprovação de cartão
 - Ativação de Cartão com cadastro de senha
 - Redefinição de Senha
 - Bloqueio Temporário
- Cancelamento Definitivo
+- Comunicação de Perda ou Roubo
+- Cancelamento Definitivo
+- Consulta de Fatura
+- Consulta de Extrato
+- Consulta de Extrato com filtros por período, tipo de transação e valor
 
-> **Observação:** Não há, no momento, contextos separados para Cliente, Segurança ou Transações, pois o foco está exclusivamente na gestão do cartão para manter o projeto simples e coeso.
+> **Observação:** Não há, no momento, contextos separados para Cliente ou Segurança, pois o foco está na gestão do cartão e transações.
 
 ---
 
 ### 1.2 Domínio Principal
 
-**Domínio:** Gestão de Cartões Bancários
+**Domínio:** Gestão de Cartões Bancários e Transações Financeiras
 
-O sistema oferece funcionalidades relacionadas à criação, ativação, segurança e controle dos cartões, com regras específicas de negócio, tais como:
+O sistema oferece funcionalidades relacionadas à criação, ativação, segurança e controle dos cartões, além do acompanhamento financeiro via transações e faturas. Regras específicas de negócio incluem:
 
 - Validação de idade mínima (≥ 18 anos)
 - Validação de CPF
 - Verificação de renda mínima conforme o tipo do cartão
 - Geração automática do número do cartão
-- Definição de status e bandeira
+- Controle de status e bandeira
 - Definição e alteração de senha com critérios de segurança
+- Cálculo do valor da fatura do cartão
+- Filtros aplicáveis ao extrato (período, valor, tipo de transação)
 
 **Estratégia:**  
-Domínio tratado como um único contexto, sem subdivisão em subdomínios, favorecendo o aprendizado e simplicidade arquitetural.
+Domínio tratado com dois contextos principais (Cartão e Transações), ainda dentro de uma arquitetura coesa e enxuta, facilitando a manutenção e evolução.
 
 ---
 
@@ -59,6 +69,10 @@ Domínio tratado como um único contexto, sem subdivisão em subdomínios, favor
 | **Renda Mensal**           | Valor informado para análise do tipo de cartão                  |
 | **Data de Nascimento**     | Usada para validar se o cliente tem idade suficiente           |
 | **Número do Cartão**       | Código gerado automaticamente para representar o cartão       |
+| **Transação (Lançamento)** | Registro financeiro vinculado a um cartão                      |
+| **Fatura**                 | Soma das transações atuais em aberto para pagamento            |
+| **Extrato**                | Histórico de transações realizadas                             |
+| **Filtro de extrato**      | Critérios aplicados à consulta do extrato                      |
 
 ---
 
@@ -67,13 +81,16 @@ Domínio tratado como um único contexto, sem subdivisão em subdomínios, favor
 ### 2.1 Agregados
 
 -  **Cartão (Cartao)**  
-  Agregado raiz que encapsula dados e regras do ciclo de vida do cartão, incluindo:
+   Agregado raiz que encapsula dados e regras do ciclo de vida do cartão, incluindo:
     - Solicitação com validações (CPF, idade, renda)
     - Geração do número do cartão
     - Controle de status (Solicitado, Ativo, Bloqueado, Cancelado)
     - Armazenamento e validação da senha
 
-> Todos os objetos de valor (CPF, RendaMensal, DataDeNascimento, Senha) são parte do agregado Cartão e não existem isoladamente.
+-  **Transação (Lancamento)**
+   Agregado responsável pelo registro das movimentações financeiras do cartão, com regras para:
+    - Cálculo do valor total da fatura
+    - Geração de extrato com filtros
 
 ---
 
@@ -81,9 +98,10 @@ Domínio tratado como um único contexto, sem subdivisão em subdomínios, favor
 
 #### Entidades (com identidade própria)
 
-| Entidade | Identificador | Descrição                      |
-|----------|---------------|-------------------------------|
-| `Cartao` | `UUID`        | Representa o cartão emitido    |
+| Entidade    | Identificador | Descrição                                 |
+|-------------|---------------|--------------------------------------------|
+| `Cartao`    | `UUID`        | Representa o cartão emitido                |
+| `Lancamento`| `UUID`        | Representa uma transação realizada com o cartão |
 
 > Nota: A entidade `Cliente` não foi criada para simplificação; dados do cliente estão incorporados no Cartão.
 
@@ -94,7 +112,7 @@ Domínio tratado como um único contexto, sem subdivisão em subdomínios, favor
 | `CPF`             | Validação de formato e consistência do CPF                    |
 | `DataDeNascimento`| Verificação de maioridade (≥ 18 anos)                         |
 | `RendaMensal`     | Representa valor positivo e verifica renda mínima por tipo    |
-| `Senha`           | Validação de regras de segurança (6 dígitos, sem repetições) |
+| `Senha`           | Validação de regras de segurança (6 dígitos, sem repetições)  |
 
 > Todos os VOs são imutáveis e validam regras ao serem criados.
 
@@ -105,10 +123,15 @@ Domínio tratado como um único contexto, sem subdivisão em subdomínios, favor
 | Caso de Uso                        | Descrição                                            |
 |------------------------------------|------------------------------------------------------|
 | `SolicitarCartaoUseCase`           | Solicitação de emissão de novo cartão                |
-| `AtivarCartaoUseCase`              | Ativação do cartão e cadatro da senha após validações|
+| `AprovarCartaoUseCase`             | Aprovação do cartão solicitado                       |
+| `AtivarCartaoUseCase`              | Ativação do cartão e cadastro da senha após validações|
 | `RedefinirSenhaUseCase`            | Redefinição da senha do cartão                       |
 | `BloquearCartaoUseCase`            | Bloqueio temporário do cartão                        |
+| `ComunhicarPerdaRouboUseCase`      | Bloqueio imediato do cartão em virtude de perda ou roubo|
 | `CancelarCartaoUseCase`            | Cancelamento permanente do cartão                    |
+| `FaturaCartaoUseCase`              | Consulta o total das transações não pagas do cartão  |
+| `ExtratoCartaoUseCase`             | Consulta todas as transações do cartão               |
+| `ExtratoFiltradoUseCase`           | Consulta transações filtradas por critérios específicos|
 
 > Casos de uso implementados na camada de aplicação, isolando regras de negócio da infraestrutura.
 
@@ -123,6 +146,10 @@ public interface CartaoRepository {
     void salvar(Cartao cartao);
     Optional<Cartao> buscarPorNumero(String numero);
 }
+
+public interface LancamentoRepository {
+    List<Lancamento> buscarPorNumeroCartao(String numeroCartao);
+}
 ```
 
-> A implementação (ImplementacaoCartaoRepositoryJpa) está na camada de infraestrutura, baseada em Spring Data JPA.
+> As implementações (ex: `ImplementacaoCartaoRepositoryJpa`) estão na camada de infraestrutura, baseadas em Spring Data JPA.
