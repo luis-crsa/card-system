@@ -1,10 +1,28 @@
-# Mapeamento DDD Completo – Sistema de Cartões
-
----
+# Modelagem DDD – Sistema de Cartões
 
 ## 1. Modelagem Estratégica
 
-### 1.1 Bounded Contexts (Contextos Delimitados)
+### 1.1 Domínio Principal
+
+**Domínio:** Gestão de Cartões Bancários e Transações Financeiras
+
+O sistema oferece funcionalidades relacionadas à criação, ativação, segurança e controle dos cartões, além do acompanhamento financeiro via transações e faturas. Regras específicas de negócio incluem:
+
+- Validação de idade mínima (≥ 18 anos)
+- Validação de CPF
+- Verificação de renda mínima conforme o tipo do cartão
+- Geração automática do número do cartão
+- Controle de status e bandeira
+- Definição e alteração de senha com critérios de segurança
+- Cálculo do valor da fatura do cartão
+- Filtros aplicáveis ao extrato (período, valor, tipo de transação)
+
+**Estratégia:**  
+Domínio tratado com dois contextos principais (Cartão e Transações), ainda dentro de uma arquitetura coesa e enxuta, facilitando a manutenção e evolução.
+
+---
+
+### 1.2 Bounded Contexts (Contextos Delimitados)
 
 Para organizar o domínio de cartões de forma coerente e manter a clareza das responsabilidades, o sistema atualmente possui dois contextos delimitados:
 
@@ -27,26 +45,6 @@ Para organizar o domínio de cartões de forma coerente e manter a clareza das r
 - Consulta de Extrato com filtros por período, tipo de transação e valor
 
 > **Observação:** Não há, no momento, contextos separados para Cliente ou Segurança, pois o foco está na gestão do cartão e transações.
-
----
-
-### 1.2 Domínio Principal
-
-**Domínio:** Gestão de Cartões Bancários e Transações Financeiras
-
-O sistema oferece funcionalidades relacionadas à criação, ativação, segurança e controle dos cartões, além do acompanhamento financeiro via transações e faturas. Regras específicas de negócio incluem:
-
-- Validação de idade mínima (≥ 18 anos)
-- Validação de CPF
-- Verificação de renda mínima conforme o tipo do cartão
-- Geração automática do número do cartão
-- Controle de status e bandeira
-- Definição e alteração de senha com critérios de segurança
-- Cálculo do valor da fatura do cartão
-- Filtros aplicáveis ao extrato (período, valor, tipo de transação)
-
-**Estratégia:**  
-Domínio tratado com dois contextos principais (Cartão e Transações), ainda dentro de uma arquitetura coesa e enxuta, facilitando a manutenção e evolução.
 
 ---
 
